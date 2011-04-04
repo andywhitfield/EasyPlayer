@@ -1,0 +1,3 @@
+A sample application to show using Caliburn.Micro. The application is
+a simple media player, which will support downloading of individual mp3
+files and subscribing to rss feeds.
