@@ -1,0 +1,13 @@
+<OutOfBrowserSettings ShortName="EasyPlayer" EnableGPUAcceleration="False" ShowInstallMenuItem="True">
+  <OutOfBrowserSettings.Blurb>EasyPlayer</OutOfBrowserSettings.Blurb>
+  <OutOfBrowserSettings.WindowSettings>
+    <WindowSettings Title="EasyPlayer Application" Top="0" Left="0" WindowStartupLocation="Manual" />
+  </OutOfBrowserSettings.WindowSettings>
+  <OutOfBrowserSettings.SecuritySettings>
+    <SecuritySettings ElevatedPermissions="Required" />
+  </OutOfBrowserSettings.SecuritySettings>
+  <OutOfBrowserSettings.Icons>
+    <Icon Size="16,16">sound.png</Icon>
+    <Icon Size="32,32">sound.png</Icon>
+  </OutOfBrowserSettings.Icons>
+</OutOfBrowserSettings>
