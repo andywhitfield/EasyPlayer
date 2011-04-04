@@ -1,2 +1,4 @@
 
 *.suo
+/EasyPlayer/Bin
+/EasyPlayer/obj
