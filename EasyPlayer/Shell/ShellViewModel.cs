@@ -1,6 +1,7 @@
 ﻿using Caliburn.Micro;
+using EasyPlayer.Widgets;
 
-namespace EasyPlayer
+namespace EasyPlayer.Shell
 {
     public class ShellViewModel : Conductor<IAppWidget>
     {
