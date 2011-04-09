@@ -2,3 +2,6 @@
 *.suo
 /EasyPlayer/Bin
 /EasyPlayer/obj
+/EasyPlayer.Tests/EasyPlayer.Tests.csproj.user
+/EasyPlayer.Tests/Bin
+/EasyPlayer.Tests/obj
