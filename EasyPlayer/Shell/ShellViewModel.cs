@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using EasyPlayer.Widgets;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EasyPlayer.Shell
 {
@@ -8,24 +10,16 @@ namespace EasyPlayer.Shell
         public BindableCollection<IAppWidget> Widgets { get; private set; }
         public IAppWidget ActiveWidget { get; set; }
 
-        public ShellViewModel()
+        public ShellViewModel(IEnumerable<IAppWidget> widgets)
         {
-            // populate widgets - could probably be replaced by an IOC container auto-populating this collection
-            PopulateWidgets();
-            ActivateWidget(Widgets[0]);
+            Widgets = new BindableCollection<IAppWidget>(widgets);
+            ActivateWidget(Widgets.FirstOrDefault(a => a.Name == "Library"));
         }
 
         public void ActivateWidget(IAppWidget widget)
         {
+            if (widget == null) return;
             ActivateItem(widget);
-        }
-
-        private void PopulateWidgets()
-        {
-            Widgets = new BindableCollection<IAppWidget> {
-                new LibraryWidgetViewModel(),
-                new Mp3WidgetViewModel()
-            };
         }
     }
 }

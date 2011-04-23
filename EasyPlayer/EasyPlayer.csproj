@@ -60,6 +60,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>lib\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Caliburn.Micro">
       <HintPath>lib\Caliburn.Micro.dll</HintPath>
     </Reference>
