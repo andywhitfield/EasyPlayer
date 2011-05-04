@@ -20,6 +20,12 @@ namespace EasyPlayer
     {
         private IContainer container;
 
+        public virtual T GetInstance<T>()
+        {
+            if (container == null) Configure();
+            return (T)GetInstance(typeof(T), null);
+        }
+
         protected override void Configure()
         {
             var builder = new ContainerBuilder();
