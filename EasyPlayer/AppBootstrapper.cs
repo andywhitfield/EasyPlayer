@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Ink;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
+using Autofac;
 using Caliburn.Micro;
 using EasyPlayer.Shell;
-using Autofac;
-using System.Reflection;
-using System.Collections.Generic;
 
 namespace EasyPlayer
 {
@@ -30,7 +22,8 @@ namespace EasyPlayer
         {
             var builder = new ContainerBuilder();
             builder
-                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly(), typeof(EventAggregator).Assembly)
+                .SingleInstance()
                 .AsImplementedInterfaces()
                 .AsSelf();
             container = builder.Build();

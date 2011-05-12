@@ -84,6 +84,11 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="Library\ILibrary.cs" />
+    <Compile Include="Library\IMediaItem.cs" />
+    <Compile Include="Library\Library.cs" />
+    <Compile Include="Library\MediaItem.cs" />
+    <Compile Include="Messages\PlayRequestMessage.cs" />
     <Compile Include="Widgets\IAppWidget.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModel.cs" />
     <Compile Include="Widgets\Mp3WidgetViewModel.cs" />

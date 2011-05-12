@@ -4,6 +4,16 @@
     xmlns:cal="http://www.caliburnproject.org">
 
     <StackPanel>
-        <TextBlock Text="[List of all media items downloaded]" />
+        <ItemsControl x:Name="LibraryItems">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Vertical">
+                        <Button Content="{Binding Name}"
+						        cal:Message.Attach="PlayMediaItem($dataContext)"
+                                Margin="2, 2, 2, 2" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </StackPanel>
 </UserControl>

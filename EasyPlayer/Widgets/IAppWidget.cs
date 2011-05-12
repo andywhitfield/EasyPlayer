@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace EasyPlayer.Widgets
+﻿namespace EasyPlayer.Widgets
 {
     public interface IAppWidget
     {
