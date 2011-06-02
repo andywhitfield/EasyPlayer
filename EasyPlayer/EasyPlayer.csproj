@@ -88,6 +88,10 @@
     <Compile Include="Library\IMediaItem.cs" />
     <Compile Include="Library\Library.cs" />
     <Compile Include="Library\MediaItem.cs" />
+    <Compile Include="MediaControl\NowPlayingView.xaml.cs">
+      <DependentUpon>NowPlayingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MediaControl\NowPlayingViewModel.cs" />
     <Compile Include="Messages\PlayRequestMessage.cs" />
     <Compile Include="Widgets\IAppWidget.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModel.cs" />
@@ -118,6 +122,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Shell\ShellView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MediaControl\NowPlayingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

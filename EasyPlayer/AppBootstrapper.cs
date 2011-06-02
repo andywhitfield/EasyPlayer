@@ -5,6 +5,7 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using EasyPlayer.Shell;
+using System.Diagnostics;
 
 namespace EasyPlayer
 {
@@ -31,6 +32,12 @@ namespace EasyPlayer
 
         protected override object GetInstance(Type serviceType, string key)
         {
+            if (serviceType == null && !string.IsNullOrWhiteSpace(key))
+            {
+                serviceType = Type.GetType(key);
+                key = null;
+            }
+
             if (string.IsNullOrWhiteSpace(key))
             {
                 if (container.IsRegistered(serviceType))
@@ -64,6 +71,14 @@ namespace EasyPlayer
         {
             base.OnExit(sender, e);
             this.SaveWindowState();
+        }
+
+        protected override void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
+        {
+            if (Debugger.IsAttached)
+                MessageBox.Show("Error in application: " + e.ExceptionObject);
+        
+            base.OnUnhandledException(sender, e);
         }
     }
 }
