@@ -98,6 +98,7 @@
       <DependentUpon>NowPlayingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="MediaControl\NowPlayingViewModel.cs" />
+    <Compile Include="MediaControl\PlayerState.cs" />
     <Compile Include="Messages\PlayRequestMessage.cs" />
     <Compile Include="Widgets\IAppWidget.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModel.cs" />
