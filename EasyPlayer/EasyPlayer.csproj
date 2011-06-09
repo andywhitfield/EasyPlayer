@@ -60,22 +60,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
-      <HintPath>lib\Autofac.dll</HintPath>
+    <Reference Include="Autofac, Version=2.4.5.724, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.4.5.724\lib\SL4\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>lib\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=1.1.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.1.1.0\lib\SL40\Caliburn.Micro.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib" />
+    <Reference Include="System.ComponentModel.Composition, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.ComponentModel.Composition.Initialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>lib\System.Windows.Interactivity.dll</HintPath>
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.1.1.0\lib\SL40\System.Windows.Controls.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.1.1.0\lib\SL40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
@@ -88,6 +93,7 @@
     <Compile Include="Library\IMediaItem.cs" />
     <Compile Include="Library\Library.cs" />
     <Compile Include="Library\MediaItem.cs" />
+    <Compile Include="MediaControl\Media.cs" />
     <Compile Include="MediaControl\NowPlayingView.xaml.cs">
       <DependentUpon>NowPlayingView.xaml</DependentUpon>
     </Compile>
@@ -107,6 +113,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +136,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <EmbeddedResource Include="Library\Kalimba.mp3" />
+    <EmbeddedResource Include="Library\Maid with the Flaxen Hair.mp3" />
     <Content Include="sound.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

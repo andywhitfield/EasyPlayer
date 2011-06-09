@@ -73,11 +73,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro">
-      <HintPath>..\EasyPlayer\lib\Caliburn.Micro.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=1.1.0.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Caliburn.Micro.1.1.0\lib\SL40\Caliburn.Micro.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Core">
-      <HintPath>lib\Moq.4.0.10827\Castle.Core.dll</HintPath>
+    <Reference Include="Castle.Core, Version=2.5.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.0.10827\lib\Silverlight4\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Silverlight.Testing">
       <HintPath>$(MSBuildExtensionsPath)\..\Microsoft SDKs\Silverlight\v4.0\Toolkit\Apr10\Testing\Microsoft.Silverlight.Testing.dll</HintPath>
@@ -85,14 +86,22 @@
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight">
       <HintPath>$(MSBuildExtensionsPath)\..\Microsoft SDKs\Silverlight\v4.0\Toolkit\Apr10\Testing\Microsoft.VisualStudio.QualityTools.UnitTesting.Silverlight.dll</HintPath>
     </Reference>
-    <Reference Include="Moq.Silverlight">
-      <HintPath>lib\Moq.4.0.10827\Moq.Silverlight.dll</HintPath>
+    <Reference Include="Moq.Silverlight, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.0.10827\lib\Silverlight4\Moq.Silverlight.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.ComponentModel.Composition.Initialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.1.1.0\lib\SL40\System.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.1.1.0\lib\SL40\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
@@ -111,6 +120,7 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>
   <ItemGroup>

@@ -39,14 +39,14 @@ namespace EasyPlayer.Shell
             NowPlayingVisible = false;
         }
 
-        public void Handle(PlayRequestMessage message)
-        {
-            System.Windows.MessageBox.Show("Play: " + message.Media.Name);
-        }
-
         public void NowPlaying()
         {
             NowPlayingVisible = true;
+        }
+
+        public void Handle(PlayRequestMessage message)
+        {
+            NowPlaying();
         }
     }
 }

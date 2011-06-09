@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace EasyPlayer.Library
 {
@@ -9,8 +10,8 @@ namespace EasyPlayer.Library
         public Library()
         {
             dummyItems = new List<IMediaItem> {
-                new MediaItem { Name = "My first podcast" },
-                new MediaItem { Name = "Another exciting podcast" }
+                new MediaItem { Name = "Kalimba", DataStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("EasyPlayer.Library.Kalimba.mp3") },
+                new MediaItem { Name = "Maid with the Flaxen Hair", DataStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("EasyPlayer.Library.Maid with the Flaxen Hair.mp3") }
             };
         }
 

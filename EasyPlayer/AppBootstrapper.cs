@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using EasyPlayer.Shell;
-using System.Diagnostics;
 
 namespace EasyPlayer
 {
