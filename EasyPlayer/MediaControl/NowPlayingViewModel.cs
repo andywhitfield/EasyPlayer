@@ -46,14 +46,11 @@ namespace EasyPlayer.MediaControl
 
         public void Handle(PlayRequestMessage message)
         {
-            Execute.OnUIThread(() =>
-            {
-                MediaPlayerState = PlayerState.Stopped;
-                currentlyPlaying = message.Media;
-                NotifyOfPropertyChange(() => CurrentlyPlaying);
-                NotifyOfPropertyChange(() => MediaStream);
-                MediaPlayerState = PlayerState.Playing;
-            });
+            MediaPlayerState = PlayerState.Stopped;
+            currentlyPlaying = message.Media;
+            NotifyOfPropertyChange(() => CurrentlyPlaying);
+            NotifyOfPropertyChange(() => MediaStream);
+            MediaPlayerState = PlayerState.Playing;
         }
     }
 }
