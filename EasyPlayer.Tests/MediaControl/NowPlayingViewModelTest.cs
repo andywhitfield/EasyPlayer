@@ -28,7 +28,7 @@ namespace EasyPlayer.Tests.MediaControl
             vm.Handle(new PlayRequestMessage(media.Object));
 
             var playStateChanges = capturedEvents.Where(x => x == "MediaPlayerState");
-            Assert.AreEqual(2, playStateChanges.Count());
+            Assert.AreEqual(1, playStateChanges.Count());
             Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
             Assert.AreSame(dummyStream, vm.MediaStream);
             Assert.AreEqual("Fake Media Item", vm.CurrentlyPlaying);
@@ -38,7 +38,9 @@ namespace EasyPlayer.Tests.MediaControl
         public void When_playing_then_playpause_should_be_pause_otherwise_should_be_play()
         {
             var eventAgg = new Mock<IEventAggregator>();
+            var media = new Mock<IMediaItem>();
             var vm = new NowPlayingViewModel(eventAgg.Object);
+            vm.Handle(new PlayRequestMessage(media.Object));
 
             vm.MediaPlayerState = PlayerState.Stopped;
             Assert.AreEqual("Play", vm.PlayPauseText);
@@ -47,6 +49,32 @@ namespace EasyPlayer.Tests.MediaControl
             Assert.AreEqual("Play", vm.PlayPauseText);
 
             vm.MediaPlayerState = PlayerState.Playing;
+            Assert.AreEqual("Pause", vm.PlayPauseText);
+        }
+
+        [TestMethod]
+        public void When_no_item_playing_then_should_not_change_play_state()
+        {
+            var eventAgg = new Mock<IEventAggregator>();
+            var vm = new NowPlayingViewModel(eventAgg.Object);
+
+            Assert.IsFalse(vm.CanPlayPause);
+            Assert.IsFalse(vm.CanStop);
+
+            Assert.AreEqual(PlayerState.Stopped, vm.MediaPlayerState);
+            vm.MediaPlayerState = PlayerState.Paused;
+            Assert.AreEqual(PlayerState.Stopped, vm.MediaPlayerState);
+            vm.MediaPlayerState = PlayerState.Playing;
+            Assert.AreEqual(PlayerState.Stopped, vm.MediaPlayerState);
+
+            // now, requesting an item to be played should allow the state change
+            var media = new Mock<IMediaItem>();
+            vm.Handle(new PlayRequestMessage(media.Object));
+
+            Assert.IsTrue(vm.CanPlayPause);
+            Assert.IsTrue(vm.CanStop);
+            vm.MediaPlayerState = PlayerState.Playing;
+            Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
             Assert.AreEqual("Pause", vm.PlayPauseText);
         }
     }

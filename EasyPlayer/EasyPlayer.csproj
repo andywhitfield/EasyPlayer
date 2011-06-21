@@ -94,9 +94,6 @@
     <Compile Include="Library\Library.cs" />
     <Compile Include="Library\MediaItem.cs" />
     <Compile Include="MediaControl\Media.cs" />
-    <Compile Include="MediaControl\NowPlayingView.xaml.cs">
-      <DependentUpon>NowPlayingView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MediaControl\NowPlayingViewModel.cs" />
     <Compile Include="MediaControl\PlayerState.cs" />
     <Compile Include="Messages\PlayRequestMessage.cs" />

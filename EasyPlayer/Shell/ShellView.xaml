@@ -1,8 +1,11 @@
 ﻿<UserControl x:Class="EasyPlayer.Shell.ShellView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:mc="clr-namespace:EasyPlayer.MediaControl"
-    xmlns:cal="http://www.caliburnproject.org">
+    xmlns:cal="http://www.caliburnproject.org"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:m="http://schemas.openxmlformats.org/markup-compatibility/2006" m:Ignorable="d"
+    d:DesignHeight="150" d:DesignWidth="400"
+    cal:Message.Attach="[Event KeyDown] = [Action KeyDown($eventArgs)]">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,7 +22,7 @@
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
             <Button Content="Now Playing"
-                    Name="NowPlaying"
+                    Name="NowPlayingWidget"
                     Margin="2, 2, 2, 2"
                     MinHeight="40" />
         
@@ -38,10 +41,6 @@
         </StackPanel>
 
         <ContentControl x:Name="ActiveItem" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding ActiveItemVisible, Converter={StaticResource booleanToVisibility}}" />
-        <StackPanel Visibility="{Binding NowPlayingVisible, Converter={StaticResource booleanToVisibility}}"
-                    Grid.Row="1" Grid.Column="1"
-                    Margin="10, 5, 5, 5">
-            <mc:NowPlayingView x:Name="MediaControl" />
-        </StackPanel>
+        <ContentControl x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding NowPlayingVisible, Converter={StaticResource booleanToVisibility}}" />
     </Grid>
 </UserControl>

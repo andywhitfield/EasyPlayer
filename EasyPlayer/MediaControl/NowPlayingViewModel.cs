@@ -15,10 +15,14 @@ namespace EasyPlayer.MediaControl
             eventAgg.Subscribe(this);
         }
 
+        public bool IsCurrentlyPlaying { get { return currentlyPlaying != null; } }
         public string CurrentlyPlaying { get { return currentlyPlaying == null ? "(Nothing)" : currentlyPlaying.Name; } }
         public Stream MediaStream { get { return currentlyPlaying == null ? null : currentlyPlaying.DataStream; } }
         public void MediaOpened() { }
-        public void MediaEnded() { }
+        public void MediaEnded()
+        {
+            Stop();
+        }
         public void MediaFailed() { }
 
         public PlayerState MediaPlayerState
@@ -26,6 +30,7 @@ namespace EasyPlayer.MediaControl
             get { return mediaPlayerState; }
             set
             {
+                if (!IsCurrentlyPlaying) return;
                 mediaPlayerState = value;
                 NotifyOfPropertyChange(() => MediaPlayerState);
                 NotifyOfPropertyChange(() => PlayPauseText);
@@ -33,12 +38,14 @@ namespace EasyPlayer.MediaControl
         }
         
         public string PlayPauseText { get { return MediaPlayerState == PlayerState.Playing ? "Pause" : "Play"; } }
-        
+
+        public bool CanPlayPause { get { return IsCurrentlyPlaying; } }
         public void PlayPause()
         {
             MediaPlayerState = MediaPlayerState == PlayerState.Playing ? PlayerState.Paused : PlayerState.Playing;
         }
 
+        public bool CanStop { get { return IsCurrentlyPlaying; } }
         public void Stop()
         {
             MediaPlayerState = PlayerState.Stopped;
@@ -50,6 +57,8 @@ namespace EasyPlayer.MediaControl
             currentlyPlaying = message.Media;
             NotifyOfPropertyChange(() => CurrentlyPlaying);
             NotifyOfPropertyChange(() => MediaStream);
+            NotifyOfPropertyChange(() => CanPlayPause);
+            NotifyOfPropertyChange(() => CanStop);
             MediaPlayerState = PlayerState.Playing;
         }
     }
