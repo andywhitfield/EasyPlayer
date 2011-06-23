@@ -14,7 +14,7 @@
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="90" />
+            <ColumnDefinition MaxWidth="90" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
@@ -40,7 +40,7 @@
             </ItemsControl>
         </StackPanel>
 
-        <ContentControl x:Name="ActiveItem" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding ActiveItemVisible, Converter={StaticResource booleanToVisibility}}" />
-        <ContentControl x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding NowPlayingVisible, Converter={StaticResource booleanToVisibility}}" />
+        <ContentControl x:Name="ActiveItem" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding ActiveItemVisible, Converter={StaticResource booleanToVisibility}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
+        <ContentControl x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding NowPlayingVisible, Converter={StaticResource booleanToVisibility}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
     </Grid>
 </UserControl>

@@ -3,17 +3,15 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cal="http://www.caliburnproject.org">
 
-    <StackPanel>
-        <ItemsControl x:Name="LibraryItems">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical">
-                        <Button Content="{Binding Name}"
-						        cal:Message.Attach="PlayMediaItem($dataContext)"
-                                Margin="2, 2, 2, 2" />
-                    </StackPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
+    <ItemsControl x:Name="LibraryItems" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel Orientation="Vertical">
+                    <Button Content="{Binding Name}"
+						    cal:Message.Attach="PlayMediaItem($dataContext)"
+                            Margin="2, 2, 2, 2" />
+                </StackPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
 </UserControl>

@@ -8,7 +8,7 @@
     d:DesignHeight="150" d:DesignWidth="400">
 
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Currently playing:  " />
                 <TextBlock Name="CurrentlyPlaying" />
@@ -19,9 +19,23 @@
                           local:Media.MediaStream="{Binding MediaStream}"
                           local:Media.PlayerState="{Binding MediaPlayerState}"/>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
-            <Button Name="PlayPause" Content="{Binding PlayPauseText}" Width="70" Margin="5 10 5 5" />
-            <Button Name="Stop" Content="Stop" Width="70" Margin="5 10 5 5" />
-        </StackPanel>
+        <Grid VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="70" />
+                <ColumnDefinition Width="65" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Name="PlayPause" Content="{Binding PlayPauseText}" Margin="5 10 5 5" />
+            <Button Grid.Column="1" Name="Stop" Content="Stop" Margin="5 10 5 5" />
+            <TextBlock Name="MediaPositionText" Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Bottom" Padding="0 0 5 0" />
+            <Slider Grid.Column="2"
+                    Name="MediaPosition"
+                    Value="{Binding SliderPosition, Mode=TwoWay}"
+                    SmallChange="1"
+                    LargeChange="{Binding MediaPositionLargeChange}"
+                    Maximum="{Binding MediaPositionMax}"
+                    cal:Message.Attach="[Event MouseLeftButtonDown] = [Action SliderMouseDown()]; [Event MouseLeftButtonUp] = [Action SliderMouseUp()];" />
+        </Grid>
     </Grid>
 </UserControl>

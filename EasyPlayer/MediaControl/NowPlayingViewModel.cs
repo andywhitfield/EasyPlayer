@@ -2,27 +2,60 @@
 using Caliburn.Micro;
 using EasyPlayer.Library;
 using EasyPlayer.Messages;
+using System.Windows.Threading;
+using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace EasyPlayer.MediaControl
 {
     public class NowPlayingViewModel : Screen, IHandle<PlayRequestMessage>
     {
+        private MediaElement mediaElement;
         private IMediaItem currentlyPlaying;
         private PlayerState mediaPlayerState = PlayerState.Stopped;
+        private DispatcherTimer updateProgressTimer;
+        private bool draggingSlider;
 
         public NowPlayingViewModel(IEventAggregator eventAgg)
         {
             eventAgg.Subscribe(this);
+            updateProgressTimer = new DispatcherTimer();
+            updateProgressTimer.Interval = TimeSpan.FromMilliseconds(300);
+            updateProgressTimer.Tick += (o, s) => UpdateProgress();
+        }
+
+        protected override void OnViewLoaded(object view)
+        {
+            base.OnViewLoaded(view);
+            var viewEl = view as FrameworkElement;
+            mediaElement = viewEl.FindName("m_MediaPlayer") as MediaElement;
+            //not capturing mouse down!
+            //var slider = viewEl.FindName("MediaPosition") as UIElement;
+            //if (slider != null) slider.CaptureMouse();
         }
 
         public bool IsCurrentlyPlaying { get { return currentlyPlaying != null; } }
         public string CurrentlyPlaying { get { return currentlyPlaying == null ? "(Nothing)" : currentlyPlaying.Name; } }
         public Stream MediaStream { get { return currentlyPlaying == null ? null : currentlyPlaying.DataStream; } }
-        public void MediaOpened() { }
+
+        public void MediaOpened()
+        {
+            if (mediaElement.NaturalDuration.HasTimeSpan)
+            {
+                var ts = mediaElement.NaturalDuration.TimeSpan;
+                MediaPositionMax = ts.TotalSeconds;
+                MediaPositionLargeChange = Math.Min(10, ts.Seconds / 10);
+                MediaPositionText = string.Format("00:00:00 / {0:00}:{1:00}:{2:00}",
+                    ts.Hours, ts.Minutes, ts.Seconds);
+            }
+        }
+
         public void MediaEnded()
         {
             Stop();
         }
+
         public void MediaFailed() { }
 
         public PlayerState MediaPlayerState
@@ -34,9 +67,20 @@ namespace EasyPlayer.MediaControl
                 mediaPlayerState = value;
                 NotifyOfPropertyChange(() => MediaPlayerState);
                 NotifyOfPropertyChange(() => PlayPauseText);
+
+                if (mediaPlayerState == PlayerState.Playing) updateProgressTimer.Start();
+                else
+                {
+                    updateProgressTimer.Stop();
+                    if (mediaPlayerState == PlayerState.Stopped)
+                    {
+                        SliderPosition = 0;
+                        NotifyOfPropertyChange(() => SliderPosition);
+                    }
+                }
             }
         }
-        
+
         public string PlayPauseText { get { return MediaPlayerState == PlayerState.Playing ? "Pause" : "Play"; } }
 
         public bool CanPlayPause { get { return IsCurrentlyPlaying; } }
@@ -51,6 +95,32 @@ namespace EasyPlayer.MediaControl
             MediaPlayerState = PlayerState.Stopped;
         }
 
+        private double sliderPosition;
+        public double SliderPosition
+        {
+            get { return sliderPosition; }
+            set
+            {
+                sliderPosition = value;
+                var duration = mediaElement.NaturalDuration.TimeSpan;
+                var current = TimeSpan.FromSeconds(sliderPosition);
+
+                MediaPositionText = string.Format("{0:00}:{1:00}:{2:00} / {3:00}:{4:00}:{5:00}",
+                    current.Hours, current.Minutes, current.Seconds, duration.Hours, duration.Minutes, duration.Seconds);
+
+                NotifyOfPropertyChange(() => SliderPosition);
+            }
+        }
+
+        private string mediaPositionText;
+        public string MediaPositionText { get { return mediaPositionText; } set { mediaPositionText = value; NotifyOfPropertyChange(() => MediaPositionText); } }
+
+        private double mediaPositionMax;
+        public double MediaPositionMax { get { return mediaPositionMax; } set { mediaPositionMax = value; NotifyOfPropertyChange(() => MediaPositionMax); } }
+
+        private int mediaPositionLargeChange;
+        public int MediaPositionLargeChange { get { return mediaPositionLargeChange; } set { mediaPositionLargeChange = value; NotifyOfPropertyChange(() => MediaPositionLargeChange); } }
+
         public void Handle(PlayRequestMessage message)
         {
             MediaPlayerState = PlayerState.Stopped;
@@ -60,6 +130,20 @@ namespace EasyPlayer.MediaControl
             NotifyOfPropertyChange(() => CanPlayPause);
             NotifyOfPropertyChange(() => CanStop);
             MediaPlayerState = PlayerState.Playing;
+        }
+
+        public void SliderMouseDown() { draggingSlider = true; }
+        public void SliderMouseUp()
+        {
+            mediaElement.Position = TimeSpan.FromSeconds(SliderPosition);
+            draggingSlider = false;
+            UpdateProgress();
+        }
+
+        public void UpdateProgress()
+        {
+            if (draggingSlider) return;
+            SliderPosition = mediaElement.Position.TotalSeconds;
         }
     }
 }
