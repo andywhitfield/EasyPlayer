@@ -6,6 +6,7 @@ using System.Windows.Threading;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace EasyPlayer.MediaControl
 {
@@ -30,9 +31,13 @@ namespace EasyPlayer.MediaControl
             base.OnViewLoaded(view);
             var viewEl = view as FrameworkElement;
             mediaElement = viewEl.FindName("m_MediaPlayer") as MediaElement;
-            //not capturing mouse down!
-            //var slider = viewEl.FindName("MediaPosition") as UIElement;
-            //if (slider != null) slider.CaptureMouse();
+            //need to do some funky stuff to capture mouse down/up events on the slider
+            var slider = viewEl.FindName("MediaPosition") as UIElement;
+            if (slider != null)
+            {
+                slider.AddHandler(FrameworkElement.MouseLeftButtonDownEvent, new MouseButtonEventHandler((s, e) => SliderMouseDown()), true);
+                slider.AddHandler(FrameworkElement.MouseLeftButtonUpEvent, new MouseButtonEventHandler((s, e) => SliderMouseUp()), true);
+            }
         }
 
         public bool IsCurrentlyPlaying { get { return currentlyPlaying != null; } }
@@ -132,9 +137,10 @@ namespace EasyPlayer.MediaControl
             MediaPlayerState = PlayerState.Playing;
         }
 
-        public void SliderMouseDown() { draggingSlider = true; }
+        public void SliderMouseDown() { if (!CanPlayPause) return; draggingSlider = true; }
         public void SliderMouseUp()
         {
+            if (!CanPlayPause) return;
             mediaElement.Position = TimeSpan.FromSeconds(SliderPosition);
             draggingSlider = false;
             UpdateProgress();

@@ -34,8 +34,7 @@
                     Value="{Binding SliderPosition, Mode=TwoWay}"
                     SmallChange="1"
                     LargeChange="{Binding MediaPositionLargeChange}"
-                    Maximum="{Binding MediaPositionMax}"
-                    cal:Message.Attach="[Event MouseLeftButtonDown] = [Action SliderMouseDown()]; [Event MouseLeftButtonUp] = [Action SliderMouseUp()];" />
+                    Maximum="{Binding MediaPositionMax}" />
         </Grid>
     </Grid>
 </UserControl>
