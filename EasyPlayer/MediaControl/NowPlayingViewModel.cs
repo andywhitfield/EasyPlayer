@@ -46,7 +46,7 @@ namespace EasyPlayer.MediaControl
 
         public void MediaOpened()
         {
-            if (mediaElement.NaturalDuration.HasTimeSpan)
+            if (mediaElement != null && mediaElement.NaturalDuration.HasTimeSpan)
             {
                 var ts = mediaElement.NaturalDuration.TimeSpan;
                 MediaPositionMax = ts.TotalSeconds;
@@ -107,11 +107,14 @@ namespace EasyPlayer.MediaControl
             set
             {
                 sliderPosition = value;
-                var duration = mediaElement.NaturalDuration.TimeSpan;
-                var current = TimeSpan.FromSeconds(sliderPosition);
+                if (mediaElement != null)
+                {
+                    var duration = mediaElement.NaturalDuration.TimeSpan;
+                    var current = TimeSpan.FromSeconds(sliderPosition);
 
-                MediaPositionText = string.Format("{0:00}:{1:00}:{2:00} / {3:00}:{4:00}:{5:00}",
-                    current.Hours, current.Minutes, current.Seconds, duration.Hours, duration.Minutes, duration.Seconds);
+                    MediaPositionText = string.Format("{0:00}:{1:00}:{2:00} / {3:00}:{4:00}:{5:00}",
+                        current.Hours, current.Minutes, current.Seconds, duration.Hours, duration.Minutes, duration.Seconds);
+                }
 
                 NotifyOfPropertyChange(() => SliderPosition);
             }
@@ -141,14 +144,14 @@ namespace EasyPlayer.MediaControl
         public void SliderMouseUp()
         {
             if (!CanPlayPause) return;
-            mediaElement.Position = TimeSpan.FromSeconds(SliderPosition);
+            if (mediaElement != null) mediaElement.Position = TimeSpan.FromSeconds(SliderPosition);
             draggingSlider = false;
             UpdateProgress();
         }
 
         public void UpdateProgress()
         {
-            if (draggingSlider) return;
+            if (draggingSlider || mediaElement == null) return;
             SliderPosition = mediaElement.Position.TotalSeconds;
         }
     }
