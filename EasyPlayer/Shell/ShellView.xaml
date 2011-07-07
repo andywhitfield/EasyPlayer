@@ -18,7 +18,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
-        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="[Possibly a 'superbar' allowing entry of mp3 url, search term, etc...]" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <ContentControl x:Name="NavigationBar" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
 
         <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
             <Button Content="Now Playing"

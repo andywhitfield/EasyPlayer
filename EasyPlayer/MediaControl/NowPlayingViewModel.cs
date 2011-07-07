@@ -78,10 +78,7 @@ namespace EasyPlayer.MediaControl
                 {
                     updateProgressTimer.Stop();
                     if (mediaPlayerState == PlayerState.Stopped)
-                    {
                         SliderPosition = 0;
-                        NotifyOfPropertyChange(() => SliderPosition);
-                    }
                 }
             }
         }
