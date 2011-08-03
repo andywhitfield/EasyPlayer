@@ -6,6 +6,7 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using EasyPlayer.Shell;
+using EasyPlayer.Library.DefaultView;
 
 namespace EasyPlayer
 {
@@ -15,6 +16,7 @@ namespace EasyPlayer
 
         public virtual T GetInstance<T>()
         {
+            Debug.WriteLine("Getting instance of " + typeof(T).FullName);
             if (container == null) Configure();
             return (T)GetInstance(typeof(T), null);
         }
@@ -23,15 +25,22 @@ namespace EasyPlayer
         {
             var builder = new ContainerBuilder();
             builder
-                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly(), typeof(EventAggregator).Assembly)
+                .RegisterAssemblyTypes(typeof(EventAggregator).Assembly, Assembly.GetExecutingAssembly())
                 .SingleInstance()
                 .AsImplementedInterfaces()
+                .AsSelf()
+                .Except<MediaItemView>();
+
+            builder
+                .RegisterType<MediaItemView>()
                 .AsSelf();
+            
             container = builder.Build();
         }
 
         protected override object GetInstance(Type serviceType, string key)
         {
+            Debug.WriteLine("Getting instance of " + serviceType.FullName + " (key=" + key + ")");
             if (serviceType == null && !string.IsNullOrWhiteSpace(key))
             {
                 serviceType = Type.GetType(key);
@@ -53,6 +62,7 @@ namespace EasyPlayer
 
         protected override IEnumerable<object> GetAllInstances(Type serviceType)
         {
+            Debug.WriteLine("Getting all instances of " + serviceType.FullName);
             return container.Resolve(typeof(IEnumerable<>).MakeGenericType(serviceType)) as IEnumerable<object>;
         }
 

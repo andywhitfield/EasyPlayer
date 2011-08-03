@@ -3,15 +3,5 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cal="http://www.caliburnproject.org">
 
-    <ItemsControl x:Name="LibraryItems" HorizontalAlignment="Left" HorizontalContentAlignment="Left">
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <StackPanel Orientation="Vertical">
-                    <Button Content="{Binding Name}"
-						    cal:Message.Attach="PlayMediaItem($dataContext)"
-                            Margin="2, 2, 2, 2" />
-                </StackPanel>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <ItemsControl x:Name="LibraryItems" HorizontalAlignment="Left" VerticalAlignment="Top" />
 </UserControl>

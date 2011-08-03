@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Caliburn.Micro;
+using System.Collections.Generic;
 
 namespace EasyPlayer.Shell
 {
@@ -16,11 +18,14 @@ namespace EasyPlayer.Shell
     {
         private static readonly string DefaultText = "Type here to search, download audio (mp3) or video, and more...";
 
+        private readonly IEnumerable<ICanNavigate> navigationAddins;
         private string searchValue;
+        private bool searchFocused;
         private SolidColorBrush searchValueColor;
 
-        public NavigationBarViewModel()
+        public NavigationBarViewModel(IEnumerable<ICanNavigate> navigationAddins)
         {
+            this.navigationAddins = navigationAddins;
             SearchLostFocused();
         }
 
@@ -35,12 +40,23 @@ namespace EasyPlayer.Shell
             }
         }
 
-        public void StartSearch()
+        public bool SearchFocused
         {
-            // TODO: set SearchValue box as focus and select all text
+            get { return searchFocused; }
+            set
+            {
+                if (searchFocused == value) return;
+                searchFocused = value;
+                NotifyOfPropertyChange(() => SearchFocused);
+            }
         }
 
-        public void SearchFocused()
+        public void StartSearch()
+        {
+            SearchFocused = true;
+        }
+
+        public void SearchGotFocused()
         {
             if (SearchValue != DefaultText) return;
             SearchValue = "";
@@ -52,6 +68,7 @@ namespace EasyPlayer.Shell
             if (!string.IsNullOrWhiteSpace(SearchValue)) return;
             SearchValue = DefaultText;
             SearchValueColor = new SolidColorBrush(Colors.Gray);
+            SearchFocused = false;
         }
 
         public void SearchKeyDown(KeyEventArgs e)
@@ -72,12 +89,19 @@ namespace EasyPlayer.Shell
 
         public bool CanGo
         {
-            get { return !string.IsNullOrWhiteSpace(SearchValue) && SearchValue != DefaultText; }
+            get { return !string.IsNullOrWhiteSpace(SearchValue) && SearchValue != DefaultText && CanNavigate; }
+        }
+
+        public bool CanNavigate
+        {
+            get { return navigationAddins.Any(c => c.CanNavigateTo(SearchValue)); }
         }
 
         public void Go()
         {
-            MessageBox.Show("Do something useful with the value: " + SearchValue);
+            var navigator = navigationAddins.FirstOrDefault(c => c.CanNavigateTo(SearchValue));
+            if (navigator == null) return;
+            navigator.NavigateTo(SearchValue);
         }
     }
 }

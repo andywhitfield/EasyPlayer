@@ -17,7 +17,7 @@ namespace EasyPlayer.Tests.MediaControl
         public void Given_a_play_request_message_should_stop_currently_playing_item_and_start_new_media()
         {
             var eventAgg = new Mock<IEventAggregator>();
-            var media = new Mock<IMediaItem>();
+            var media = new Mock<MediaItem>();
             var dummyStream = new MemoryStream();
             media.Setup(x => x.Name).Returns("Fake Media Item");
             media.Setup(x => x.DataStream).Returns(dummyStream);
@@ -38,7 +38,7 @@ namespace EasyPlayer.Tests.MediaControl
         public void When_playing_then_playpause_should_be_pause_otherwise_should_be_play()
         {
             var eventAgg = new Mock<IEventAggregator>();
-            var media = new Mock<IMediaItem>();
+            var media = new Mock<MediaItem>();
             var vm = new NowPlayingViewModel(eventAgg.Object);
             vm.Handle(new PlayRequestMessage(media.Object));
 
@@ -68,7 +68,7 @@ namespace EasyPlayer.Tests.MediaControl
             Assert.AreEqual(PlayerState.Stopped, vm.MediaPlayerState);
 
             // now, requesting an item to be played should allow the state change
-            var media = new Mock<IMediaItem>();
+            var media = new Mock<MediaItem>();
             vm.Handle(new PlayRequestMessage(media.Object));
 
             Assert.IsTrue(vm.CanPlayPause);

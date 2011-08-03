@@ -8,7 +8,7 @@ using EasyPlayer.MediaControl;
 
 namespace EasyPlayer.Shell
 {
-    public class ShellViewModel : Conductor<IAppWidget>, IHandle<PlayRequestMessage>
+    public class ShellViewModel : Conductor<IAppWidget>, IHandle<PlayRequestMessage>, IHandle<ActivateWidgetMessage>
     {
         private bool nowPlayingVisible = false;
         private NowPlayingViewModel nowPlaying;
@@ -55,10 +55,8 @@ namespace EasyPlayer.Shell
             NowPlayingVisible = true;
         }
 
-        public void Handle(PlayRequestMessage message)
-        {
-            NowPlayingWidget();
-        }
+        public void Handle(PlayRequestMessage message) { NowPlayingWidget(); }
+        public void Handle(ActivateWidgetMessage message) { ActivateWidget(message.Widget); }
 
         public void KeyDown(KeyEventArgs e)
         {

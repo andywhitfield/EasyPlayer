@@ -13,7 +13,7 @@ namespace EasyPlayer.MediaControl
     public class NowPlayingViewModel : Screen, IHandle<PlayRequestMessage>
     {
         private MediaElement mediaElement;
-        private IMediaItem currentlyPlaying;
+        private MediaItem currentlyPlaying;
         private PlayerState mediaPlayerState = PlayerState.Stopped;
         private DispatcherTimer updateProgressTimer;
         private bool draggingSlider;

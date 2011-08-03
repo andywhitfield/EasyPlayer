@@ -2,11 +2,11 @@
 
 namespace EasyPlayer.Messages
 {
-    public class PlayRequestMessage
+    public class MediaItemDeletedMessage
     {
         public readonly MediaItem Media;
 
-        public PlayRequestMessage(MediaItem media)
+        public MediaItemDeletedMessage(MediaItem media)
         {
             this.Media = media;
         }

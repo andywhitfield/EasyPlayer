@@ -89,14 +89,18 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="ICanNavigate.cs" />
+    <Compile Include="Library\DefaultView\MediaItemViewModel.cs" />
     <Compile Include="Library\ILibrary.cs" />
-    <Compile Include="Library\IMediaItem.cs" />
     <Compile Include="Library\Library.cs" />
     <Compile Include="Library\MediaItem.cs" />
     <Compile Include="MediaControl\Media.cs" />
     <Compile Include="MediaControl\NowPlayingViewModel.cs" />
     <Compile Include="MediaControl\PlayerState.cs" />
+    <Compile Include="Messages\ActivateWidgetMessage.cs" />
+    <Compile Include="Messages\MediaItemDeletedMessage.cs" />
     <Compile Include="Messages\PlayRequestMessage.cs" />
+    <Compile Include="Shell\ControlProperties.cs" />
     <Compile Include="Shell\NavigationBarViewModel.cs" />
     <Compile Include="Widgets\IAppWidget.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModel.cs" />
@@ -140,6 +144,10 @@
     <Page Include="Shell\NavigationBarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Library\DefaultView\MediaItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Content Include="sound.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
