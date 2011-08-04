@@ -30,11 +30,12 @@ namespace EasyPlayer.Tests.Widgets
         {
             var eventAgg = new Mock<IEventAggregator>();
             var library = new Mock<ILibrary>();
+            library.Setup(x => x.MediaItems).Returns(new ObservableCollection<MediaItem>());
 
             var libraryWidget = new LibraryWidgetViewModel(eventAgg.Object, library.Object);
             libraryWidget.NavigateTo("http://someserver/path/to/media.mp3");
 
-            library.Verify(l => l.AddNewMediaItem("media.mp3", new Uri("http://someserver/path/to/media.mp3")));
+            library.Verify(l => l.AddNewMediaItem("media", new Uri("http://someserver/path/to/media.mp3")));
         }
 
 
@@ -43,11 +44,12 @@ namespace EasyPlayer.Tests.Widgets
         {
             var eventAgg = new Mock<IEventAggregator>();
             var library = new Mock<ILibrary>();
+            library.Setup(x => x.MediaItems).Returns(new ObservableCollection<MediaItem>());
 
             var libraryWidget = new LibraryWidgetViewModel(eventAgg.Object, library.Object);
             libraryWidget.NavigateTo(@"C:\Users\me\My Music\the media.mp3");
 
-            library.Verify(l => l.AddNewMediaItem("the media.mp3", new Uri(@"file://C:\Users\me\My Music\the media.mp3")));
+            library.Verify(l => l.AddNewMediaItem("the media", new Uri(@"file://C:\Users\me\My Music\the media.mp3")));
         }
     }
 }
