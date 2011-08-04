@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Windows;
 using Autofac;
 using Caliburn.Micro;
-using EasyPlayer.Shell;
 using EasyPlayer.Library.DefaultView;
+using EasyPlayer.Shell;
 
 namespace EasyPlayer
 {

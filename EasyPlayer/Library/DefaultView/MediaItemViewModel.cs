@@ -1,7 +1,7 @@
-﻿using Caliburn.Micro;
-using EasyPlayer.Messages;
-using System;
+﻿using System;
 using System.Diagnostics;
+using Caliburn.Micro;
+using EasyPlayer.Messages;
 
 namespace EasyPlayer.Library.DefaultView
 {

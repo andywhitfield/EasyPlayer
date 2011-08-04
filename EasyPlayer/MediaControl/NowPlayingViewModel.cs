@@ -1,12 +1,12 @@
-﻿using System.IO;
-using Caliburn.Micro;
-using EasyPlayer.Library;
-using EasyPlayer.Messages;
-using System.Windows.Threading;
-using System;
+﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
+using Caliburn.Micro;
+using EasyPlayer.Library;
+using EasyPlayer.Messages;
 
 namespace EasyPlayer.MediaControl
 {

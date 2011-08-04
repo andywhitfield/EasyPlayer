@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Collections.ObjectModel;
-using Caliburn.Micro;
-using EasyPlayer.Library;
-using EasyPlayer.Messages;
-using EasyPlayer.Library.DefaultView;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using Caliburn.Micro;
+using EasyPlayer.Library;
+using EasyPlayer.Library.DefaultView;
+using EasyPlayer.Messages;
 
 namespace EasyPlayer.Widgets
 {

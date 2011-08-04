@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Reflection;
-using System.Net;
-using System.Threading;
 using System.Diagnostics;
+using System.Net;
+using System.Reflection;
 
 namespace EasyPlayer.Library
 {

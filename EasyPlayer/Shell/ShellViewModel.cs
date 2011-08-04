@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Input;
 using Caliburn.Micro;
+using EasyPlayer.MediaControl;
 using EasyPlayer.Messages;
 using EasyPlayer.Widgets;
-using System.Windows.Input;
-using EasyPlayer.MediaControl;
 
 namespace EasyPlayer.Shell
 {
