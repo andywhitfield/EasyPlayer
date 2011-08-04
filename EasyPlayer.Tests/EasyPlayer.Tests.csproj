@@ -113,6 +113,7 @@
     <Compile Include="MediaControl\NowPlayingViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellViewModelTest.cs" />
+    <Compile Include="Shell\NavigationBarViewModelTest.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
