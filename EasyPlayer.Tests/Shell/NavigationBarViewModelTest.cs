@@ -1,9 +1,9 @@
-﻿using EasyPlayer.Shell;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using EasyPlayer.Shell;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using System;
-using System.Linq;
 
 namespace EasyPlayer.Tests.Shell
 {
