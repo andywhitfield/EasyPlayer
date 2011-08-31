@@ -61,9 +61,8 @@ namespace EasyPlayer.Library
             get { return downloadProgress; }
             set
             {
-                //if (downloadProgress == value) return;
-                //downloadProgress = Math.Min(Math.Max(value, 100), 0);
-                downloadProgress = value;
+                if (downloadProgress == value) return;
+                downloadProgress = Math.Max(Math.Min(value, 100), 0);
                 if (DownloadProgressChanged != null) DownloadProgressChanged(this, EventArgs.Empty);
             }
         }
