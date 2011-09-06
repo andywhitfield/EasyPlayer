@@ -77,5 +77,20 @@ namespace EasyPlayer.Tests.MediaControl
             Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
             Assert.AreEqual("Pause", vm.PlayPauseText);
         }
+
+        [TestMethod]
+        public void When_media_is_opened_should_forward_to_previous_media_position()
+        {
+            var eventAgg = new Mock<IEventAggregator>();
+            var vm = new NowPlayingViewModel(eventAgg.Object);
+
+            var media = new MediaItem();
+            media.MediaPosition = 100;
+            vm.Handle(new PlayRequestMessage(media));
+            Assert.AreEqual(0, vm.SliderPosition);
+
+            vm.MediaOpened();
+            Assert.AreEqual(100, vm.SliderPosition);
+        }
     }
 }

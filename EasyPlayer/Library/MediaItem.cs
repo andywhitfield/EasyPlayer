@@ -53,6 +53,8 @@ namespace EasyPlayer.Library
 
         public virtual Stream DataStream { get; set; }
 
+        public virtual double MediaPosition { get; set; }
+
         /// <summary>
         /// The percentage (0-100) of the download that has completed.
         /// </summary>
