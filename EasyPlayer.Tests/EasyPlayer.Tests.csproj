@@ -104,6 +104,7 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -112,6 +113,7 @@
     <Compile Include="AppBootstrapperTest.cs" />
     <Compile Include="Library\DefaultView\MediaItemViewModelTest.cs" />
     <Compile Include="Library\MediaItemTest.cs" />
+    <Compile Include="Library\Persistence\MediaItemPersisterTest.cs" />
     <Compile Include="MediaControl\NowPlayingViewModelTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellViewModelTest.cs" />

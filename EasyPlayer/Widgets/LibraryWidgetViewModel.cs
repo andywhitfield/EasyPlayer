@@ -71,6 +71,7 @@ namespace EasyPlayer.Widgets
         public void Handle(MediaItemDeletedMessage message)
         {
             onCollectionChanged();
+            library.Update(message.Media);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace EasyPlayer.MediaControl
 
         public bool IsCurrentlyPlaying { get { return currentlyPlaying != null; } }
         public string CurrentlyPlaying { get { return currentlyPlaying == null ? "(Nothing)" : currentlyPlaying.Name; } }
-        public Stream MediaStream { get { return currentlyPlaying == null ? null : currentlyPlaying.DataStream; } }
+        public Stream MediaStream { get { return currentlyPlaying == null ? null : currentlyPlaying.DataStream(); } }
 
         public void MediaOpened()
         {
@@ -134,6 +134,12 @@ namespace EasyPlayer.MediaControl
         public void Handle(PlayRequestMessage message)
         {
             if (currentlyPlaying != null) currentlyPlaying.MediaPosition = SliderPosition;
+            if (currentlyPlaying != null && currentlyPlaying == message.Media)
+            {
+                MediaPlayerState = PlayerState.Playing;
+                return;
+            }
+
             MediaPlayerState = PlayerState.Stopped;
             currentlyPlaying = message.Media;
             NotifyOfPropertyChange(() => CurrentlyPlaying);

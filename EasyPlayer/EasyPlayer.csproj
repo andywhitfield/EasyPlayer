@@ -94,12 +94,16 @@
     <Compile Include="Library\ILibrary.cs" />
     <Compile Include="Library\Library.cs" />
     <Compile Include="Library\MediaItem.cs" />
+    <Compile Include="Library\Persistence\IMediaItemPersister.cs" />
+    <Compile Include="Library\Persistence\MediaItemPersister.cs" />
     <Compile Include="MediaControl\Media.cs" />
     <Compile Include="MediaControl\NowPlayingViewModel.cs" />
     <Compile Include="MediaControl\PlayerState.cs" />
     <Compile Include="Messages\ActivateWidgetMessage.cs" />
     <Compile Include="Messages\MediaItemDeletedMessage.cs" />
     <Compile Include="Messages\PlayRequestMessage.cs" />
+    <Compile Include="Persistence\IPersistence.cs" />
+    <Compile Include="Persistence\IsolatedStoragePersistence.cs" />
     <Compile Include="Shell\ControlProperties.cs" />
     <Compile Include="Shell\NavigationBarViewModel.cs" />
     <Compile Include="Widgets\IAppWidget.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EasyPlayer.Library
@@ -12,6 +13,7 @@ namespace EasyPlayer.Library
         private bool isAvailable;
         private bool isDeleted;
         private int downloadProgress;
+        private IDictionary<string, string> extendedProperties;
 
         public MediaItem()
         {
@@ -19,9 +21,13 @@ namespace EasyPlayer.Library
             IsAvailable = false;
             IsDeleted = false;
             DownloadProgress = 0;
+            UtcDateAddedToLibrary = DateTime.UtcNow;
+            extendedProperties = new Dictionary<string, string>();
         }
 
         public virtual string Name { get; set; }
+        public virtual DateTime UtcDateAddedToLibrary { get; set; }
+        public virtual IDictionary<string, string> ExtendedProperties { get { return extendedProperties; } }
         
         /// <summary>
         /// Indicates if the DataStream is available to read/play.
@@ -51,7 +57,7 @@ namespace EasyPlayer.Library
             }
         }
 
-        public virtual Stream DataStream { get; set; }
+        public virtual Func<Stream> DataStream { get; set; }
 
         public virtual double MediaPosition { get; set; }
 

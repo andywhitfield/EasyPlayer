@@ -7,5 +7,6 @@ namespace EasyPlayer.Library
     {
         ObservableCollection<MediaItem> MediaItems { get; }
         MediaItem AddNewMediaItem(string name, Uri originalUri);
+        void Update(MediaItem mediaItem);
     }
 }

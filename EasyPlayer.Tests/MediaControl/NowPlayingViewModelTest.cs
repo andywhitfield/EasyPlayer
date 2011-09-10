@@ -20,7 +20,7 @@ namespace EasyPlayer.Tests.MediaControl
             var media = new Mock<MediaItem>();
             var dummyStream = new MemoryStream();
             media.Setup(x => x.Name).Returns("Fake Media Item");
-            media.Setup(x => x.DataStream).Returns(dummyStream);
+            media.Setup(x => x.DataStream).Returns(() => dummyStream);
             var vm = new NowPlayingViewModel(eventAgg.Object);
 
             var capturedEvents = new List<string>();
@@ -91,6 +91,25 @@ namespace EasyPlayer.Tests.MediaControl
 
             vm.MediaOpened();
             Assert.AreEqual(100, vm.SliderPosition);
+        }
+
+        [TestMethod]
+        public void When_requesting_to_play_currently_playing_media_should_just_resume_playing()
+        {
+            var eventAgg = new Mock<IEventAggregator>();
+            var vm = new NowPlayingViewModel(eventAgg.Object);
+
+            var media = new MediaItem();
+            media.MediaPosition = 100;
+            vm.Handle(new PlayRequestMessage(media));
+            Assert.AreEqual(0, vm.SliderPosition);
+            Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
+
+            vm.SliderPosition = 10;
+
+            vm.Handle(new PlayRequestMessage(media));
+            Assert.AreEqual(10, vm.SliderPosition);
+            Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
         }
     }
 }
