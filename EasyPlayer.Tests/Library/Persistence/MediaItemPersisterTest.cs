@@ -26,6 +26,21 @@ namespace EasyPlayer.Tests.Library.Persistence
         }
 
         [TestMethod]
+        public void Given_media_binary_already_exists_when_saving_media_item_should_not_write_file_to_library_directory()
+        {
+            var persistence = new Mock<IPersistence>(MockBehavior.Strict);
+            var persister = new MediaItemPersister(persistence.Object);
+
+            persistence.Setup(p => p.Filenames("library.data")).Returns(new[] { "test-1" });
+            persistence.Setup(p => p.WriteTextFile(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
+
+            var mediaItem = new MediaItem { Name = "test-1", IsAvailable = true, DataStream = () => new MemoryStream() };
+            persister.Save(mediaItem);
+
+            persistence.Verify(p => p.WriteTextFile("library", "test-1", It.Is<string>(xml => MediaItemXml(mediaItem, xml))));
+        }
+
+        [TestMethod]
         public void When_loading_media_item_should_deserialize_from_xml()
         {
             var persistence = new Mock<IPersistence>();

@@ -6,20 +6,23 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Caliburn.Micro;
 using EasyPlayer.Library;
+using EasyPlayer.Library.Persistence;
 using EasyPlayer.Messages;
 
 namespace EasyPlayer.MediaControl
 {
     public class NowPlayingViewModel : Screen, IHandle<PlayRequestMessage>
     {
+        private readonly IMediaItemPersister mediaItemPersister;
         private MediaElement mediaElement;
         private MediaItem currentlyPlaying;
         private PlayerState mediaPlayerState = PlayerState.Stopped;
         private DispatcherTimer updateProgressTimer;
         private bool draggingSlider;
 
-        public NowPlayingViewModel(IEventAggregator eventAgg)
+        public NowPlayingViewModel(IEventAggregator eventAgg, IMediaItemPersister mediaItemPersister)
         {
+            this.mediaItemPersister = mediaItemPersister;
             eventAgg.Subscribe(this);
             updateProgressTimer = new DispatcherTimer();
             updateProgressTimer.Interval = TimeSpan.FromMilliseconds(300);
@@ -133,11 +136,16 @@ namespace EasyPlayer.MediaControl
 
         public void Handle(PlayRequestMessage message)
         {
-            if (currentlyPlaying != null) currentlyPlaying.MediaPosition = SliderPosition;
-            if (currentlyPlaying != null && currentlyPlaying == message.Media)
+            if (currentlyPlaying == message.Media)
             {
                 MediaPlayerState = PlayerState.Playing;
                 return;
+            }
+
+            if (currentlyPlaying != null)
+            {
+                currentlyPlaying.MediaPosition = SliderPosition;
+                mediaItemPersister.Save(currentlyPlaying);
             }
 
             MediaPlayerState = PlayerState.Stopped;
@@ -162,6 +170,13 @@ namespace EasyPlayer.MediaControl
         {
             if (draggingSlider || mediaElement == null) return;
             SliderPosition = mediaElement.Position.TotalSeconds;
+        }
+
+        public void OnClose()
+        {
+            if (currentlyPlaying == null) return;
+            currentlyPlaying.MediaPosition = SliderPosition;
+            mediaItemPersister.Save(currentlyPlaying);
         }
     }
 }

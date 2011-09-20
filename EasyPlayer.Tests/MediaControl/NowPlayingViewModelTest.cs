@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Caliburn.Micro;
 using EasyPlayer.Library;
+using EasyPlayer.Library.Persistence;
 using EasyPlayer.MediaControl;
 using EasyPlayer.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -21,7 +22,7 @@ namespace EasyPlayer.Tests.MediaControl
             var dummyStream = new MemoryStream();
             media.Setup(x => x.Name).Returns("Fake Media Item");
             media.Setup(x => x.DataStream).Returns(() => dummyStream);
-            var vm = new NowPlayingViewModel(eventAgg.Object);
+            var vm = new NowPlayingViewModel(eventAgg.Object, new Mock<IMediaItemPersister>().Object);
 
             var capturedEvents = new List<string>();
             vm.PropertyChanged += (s, e) => capturedEvents.Add(e.PropertyName);
@@ -39,7 +40,7 @@ namespace EasyPlayer.Tests.MediaControl
         {
             var eventAgg = new Mock<IEventAggregator>();
             var media = new Mock<MediaItem>();
-            var vm = new NowPlayingViewModel(eventAgg.Object);
+            var vm = new NowPlayingViewModel(eventAgg.Object, new Mock<IMediaItemPersister>().Object);
             vm.Handle(new PlayRequestMessage(media.Object));
 
             vm.MediaPlayerState = PlayerState.Stopped;
@@ -56,7 +57,7 @@ namespace EasyPlayer.Tests.MediaControl
         public void When_no_item_playing_then_should_not_change_play_state()
         {
             var eventAgg = new Mock<IEventAggregator>();
-            var vm = new NowPlayingViewModel(eventAgg.Object);
+            var vm = new NowPlayingViewModel(eventAgg.Object, new Mock<IMediaItemPersister>().Object);
 
             Assert.IsFalse(vm.CanPlayPause);
             Assert.IsFalse(vm.CanStop);
@@ -82,7 +83,7 @@ namespace EasyPlayer.Tests.MediaControl
         public void When_media_is_opened_should_forward_to_previous_media_position()
         {
             var eventAgg = new Mock<IEventAggregator>();
-            var vm = new NowPlayingViewModel(eventAgg.Object);
+            var vm = new NowPlayingViewModel(eventAgg.Object, new Mock<IMediaItemPersister>().Object);
 
             var media = new MediaItem();
             media.MediaPosition = 100;
@@ -97,7 +98,7 @@ namespace EasyPlayer.Tests.MediaControl
         public void When_requesting_to_play_currently_playing_media_should_just_resume_playing()
         {
             var eventAgg = new Mock<IEventAggregator>();
-            var vm = new NowPlayingViewModel(eventAgg.Object);
+            var vm = new NowPlayingViewModel(eventAgg.Object, new Mock<IMediaItemPersister>().Object);
 
             var media = new MediaItem();
             media.MediaPosition = 100;
@@ -110,6 +111,26 @@ namespace EasyPlayer.Tests.MediaControl
             vm.Handle(new PlayRequestMessage(media));
             Assert.AreEqual(10, vm.SliderPosition);
             Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
+        }
+
+        [TestMethod]
+        public void Given_a_new_item_to_play_should_persist_the_previously_playing_item()
+        {
+            var eventAgg = new Mock<IEventAggregator>();
+            var mediaItemPersister = new Mock<IMediaItemPersister>();
+            var vm = new NowPlayingViewModel(eventAgg.Object, mediaItemPersister.Object);
+
+            var media1 = new MediaItem();
+            vm.Handle(new PlayRequestMessage(media1));
+
+            var media2 = new MediaItem();
+            vm.Handle(new PlayRequestMessage(media2));
+
+            mediaItemPersister.Verify(p => p.Save(media1));
+
+            vm.Handle(new PlayRequestMessage(media1));
+
+            mediaItemPersister.Verify(p => p.Save(media2));
         }
     }
 }

@@ -1,12 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Text;
+using Caliburn.Micro;
+using EasyPlayer.Messages;
 
 namespace EasyPlayer.Persistence
 {
-    public class IsolatedStoragePersistence : IPersistence
+    public class IsolatedStoragePersistence : IPersistence, IHandle<IncreaseQuotaMessage>
     {
+        private readonly IEventAggregator eventAgg;
+        private List<System.Action<IsolatedStorageFile>> delayedWrites = new List<System.Action<IsolatedStorageFile>>();
+
+        public IsolatedStoragePersistence(IEventAggregator eventAgg)
+        {
+            this.eventAgg = eventAgg;
+            this.eventAgg.Subscribe(this);
+        }
+
         public void WriteTextFile(string filename, string contents)
         {
             WriteTextFile("", filename, contents);
@@ -33,13 +46,27 @@ namespace EasyPlayer.Persistence
             var fullPath = string.IsNullOrWhiteSpace(directory) ? filename : Path.Combine(directory, filename);
             
             using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
+                WriteBinaryFileToIsolatedStorage(directory, filename, fullPath, contents, iso);
+        }
+        private void WriteBinaryFileToIsolatedStorage(string directory, string filename, string fullPath, Stream contents, IsolatedStorageFile iso)
+        {
+            if (iso.AvailableFreeSpace < contents.Length)
             {
-                if (!string.IsNullOrWhiteSpace(directory) && !iso.DirectoryExists(directory))
-                    iso.CreateDirectory(directory);
+                Debug.WriteLine("Not enough space to write contents to isolated storage - have to prompt user to increase quota. Current quota: {0}; Free space: {1}; Attempting to write: {2}", iso.Quota, iso.AvailableFreeSpace, contents.Length);
+                eventAgg.Publish(new OutOfQuotaMessage(iso.Quota, iso.AvailableFreeSpace, contents.Length));
 
-                using (var file = iso.OpenFile(fullPath, FileMode.Create))
-                    contents.CopyTo(file);
+                delayedWrites.Add(i => WriteBinaryFileToIsolatedStorage(directory, filename, fullPath, contents, i));
+
+                return;
             }
+
+            Debug.WriteLine("Writing to isolated storage {0}", fullPath);
+
+            if (!string.IsNullOrWhiteSpace(directory) && !iso.DirectoryExists(directory))
+                iso.CreateDirectory(directory);
+
+            using (var file = iso.OpenFile(fullPath, FileMode.Create))
+                contents.CopyTo(file);
         }
 
         public IEnumerable<string> Filenames()
@@ -104,6 +131,25 @@ namespace EasyPlayer.Persistence
                 if (!iso.FileExists(fullPath)) return;
 
                 iso.DeleteFile(fullPath);
+            }
+        }
+
+        public void Handle(IncreaseQuotaMessage message)
+        {
+            using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
+            {
+                var newQuotaSize = iso.Quota + Math.Max(message.IncreaseBy, 1024);
+                Debug.WriteLine("Increasing quota to {0}", newQuotaSize);
+                
+                var increased = iso.IncreaseQuotaTo(newQuotaSize);
+                Debug.WriteLine("Increased quota? {0}", increased);
+
+                var writes = new List<System.Action<IsolatedStorageFile>>(delayedWrites);
+                delayedWrites.Clear();
+                
+                writes.ForEach(a => a(iso));
+
+                Debug.WriteLine("Replayed writes that were pending the quota request.");
             }
         }
     }

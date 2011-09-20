@@ -8,17 +8,22 @@ using EasyPlayer.Widgets;
 
 namespace EasyPlayer.Shell
 {
-    public class ShellViewModel : Conductor<IAppWidget>, IHandle<PlayRequestMessage>, IHandle<ActivateWidgetMessage>
+    public class ShellViewModel : Conductor<IAppWidget>, IHandle<PlayRequestMessage>, IHandle<ActivateWidgetMessage>, IHandle<OutOfQuotaMessage>
     {
+        private IEventAggregator eventAgg;
+        private IWindowManager windowMgr;
         private bool nowPlayingVisible = false;
         private NowPlayingViewModel nowPlaying;
         private NavigationBarViewModel navBar;
 
-        public ShellViewModel(IEnumerable<IAppWidget> widgets, IEventAggregator eventAgg, NowPlayingViewModel nowPlaying, NavigationBarViewModel navBar)
+        public ShellViewModel(IEnumerable<IAppWidget> widgets, IEventAggregator eventAgg, IWindowManager windowMgr, NowPlayingViewModel nowPlaying, NavigationBarViewModel navBar)
         {
-            eventAgg.Subscribe(this);
+            this.eventAgg = eventAgg;
             this.nowPlaying = nowPlaying;
             this.navBar = navBar;
+            this.windowMgr = windowMgr;
+
+            eventAgg.Subscribe(this);
             Widgets = new BindableCollection<IAppWidget>(widgets.OrderBy(x => x.Name));
             ActivateWidget(Widgets.FirstOrDefault(a => a.Name == "Library"));
         }
@@ -57,6 +62,7 @@ namespace EasyPlayer.Shell
 
         public void Handle(PlayRequestMessage message) { NowPlayingWidget(); }
         public void Handle(ActivateWidgetMessage message) { ActivateWidget(message.Widget); }
+        public void Handle(OutOfQuotaMessage message) { windowMgr.ShowDialog(new OutOfQuotaViewModel(eventAgg, message)); }
 
         public void KeyDown(KeyEventArgs e)
         {

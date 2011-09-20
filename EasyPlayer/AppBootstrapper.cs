@@ -6,6 +6,7 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using EasyPlayer.Library.DefaultView;
+using EasyPlayer.Persistence;
 using EasyPlayer.Shell;
 
 namespace EasyPlayer
@@ -74,13 +75,14 @@ namespace EasyPlayer
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
             base.OnStartup(sender, e);
-            this.RestoreWindowState();
+            this.RestoreWindowState(container.Resolve<IPersistence>());
         }
 
         protected override void OnExit(object sender, EventArgs e)
         {
             base.OnExit(sender, e);
-            this.SaveWindowState();
+            container.Resolve<ShellViewModel>().NowPlaying.OnClose();
+            this.SaveWindowState(container.Resolve<IPersistence>());
         }
 
         protected override void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

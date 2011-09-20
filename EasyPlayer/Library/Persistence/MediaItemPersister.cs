@@ -29,7 +29,7 @@ namespace EasyPlayer.Library.Persistence
             this.persistence.WriteTextFile("library", mediaItem.Name, Serialize(mediaItem));
             if (mediaItem.IsDeleted)
                 this.persistence.DeleteFile("library.data", mediaItem.Name);
-            else
+            else if (!this.persistence.Filenames("library.data").Contains(mediaItem.Name))
                 this.persistence.WriteBinaryFile("library.data", mediaItem.Name, mediaItem.DataStream());
 
             Debug.WriteLine("Item {0} saved", mediaItem.Name);

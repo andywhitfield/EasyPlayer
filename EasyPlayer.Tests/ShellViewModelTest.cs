@@ -15,7 +15,7 @@ namespace EasyPlayer.Tests
         {
             var widgets = new Mock<IAppWidget>();
             var eventAgg = new Mock<IEventAggregator>();
-            var vm = new ShellViewModel(new[] { widgets.Object }, eventAgg.Object, null, null);
+            var vm = new ShellViewModel(new[] { widgets.Object }, eventAgg.Object, new Mock<IWindowManager>().Object, null, null);
 
             Assert.IsFalse(vm.NowPlayingVisible);
             Assert.IsTrue(vm.ActiveItemVisible);
