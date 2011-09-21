@@ -5,6 +5,28 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPlayer", "EasyPlayer\Ea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EasyPlayer.Tests", "EasyPlayer.Tests\EasyPlayer.Tests.csproj", "{C7A086B7-F486-4387-B3F8-224808CBC81B}"
 EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "EasyPlayer.Web", "EasyPlayer.Web\", "{2B2B0CE0-046D-48C0-B446-4ADC373A4DDF}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/EasyPlayer.Web"
+		Debug.AspNetCompiler.PhysicalPath = "EasyPlayer.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\EasyPlayer.Web\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/EasyPlayer.Web"
+		Release.AspNetCompiler.PhysicalPath = "EasyPlayer.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\EasyPlayer.Web\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "56163"
+		DefaultWebSiteLanguage = "Visual C#"
+		ProjOutputReferences = "{EEFE742A-95CB-48F1-A4CF-D3DA94AABE16}|ClientBin|false;"
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +41,10 @@ Global
 		{C7A086B7-F486-4387-B3F8-224808CBC81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7A086B7-F486-4387-B3F8-224808CBC81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7A086B7-F486-4387-B3F8-224808CBC81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B2B0CE0-046D-48C0-B446-4ADC373A4DDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2B0CE0-046D-48C0-B446-4ADC373A4DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B2B0CE0-046D-48C0-B446-4ADC373A4DDF}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B2B0CE0-046D-48C0-B446-4ADC373A4DDF}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

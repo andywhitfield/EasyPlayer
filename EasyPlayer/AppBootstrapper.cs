@@ -6,6 +6,7 @@ using System.Windows;
 using Autofac;
 using Caliburn.Micro;
 using EasyPlayer.Library.DefaultView;
+using EasyPlayer.Messages;
 using EasyPlayer.Persistence;
 using EasyPlayer.Shell;
 
@@ -76,6 +77,18 @@ namespace EasyPlayer
         {
             base.OnStartup(sender, e);
             this.RestoreWindowState(container.Resolve<IPersistence>());
+
+            if (Application.Current.IsRunningOutOfBrowser && !Debugger.IsAttached)
+            {
+                Application.Current.CheckAndDownloadUpdateCompleted += (s1, e1) =>
+                {
+                    Debug.WriteLine("Application update checking completed. Is there an update? " + e1.UpdateAvailable);
+                    if (!e1.UpdateAvailable) return;
+                    var eventAgg = container.Resolve<IEventAggregator>();
+                    eventAgg.Publish(new ApplicationUpdateAvailableMessage());
+                };
+                Application.Current.CheckAndDownloadUpdateAsync();
+            }
         }
 
         protected override void OnExit(object sender, EventArgs e)

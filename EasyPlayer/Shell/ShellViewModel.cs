@@ -8,7 +8,7 @@ using EasyPlayer.Widgets;
 
 namespace EasyPlayer.Shell
 {
-    public class ShellViewModel : Conductor<IAppWidget>, IHandle<PlayRequestMessage>, IHandle<ActivateWidgetMessage>, IHandle<OutOfQuotaMessage>
+    public class ShellViewModel : Conductor<IAppWidget>, IHandle<PlayRequestMessage>, IHandle<ActivateWidgetMessage>, IHandle<OutOfQuotaMessage>, IHandle<ApplicationUpdateAvailableMessage>
     {
         private IEventAggregator eventAgg;
         private IWindowManager windowMgr;
@@ -63,6 +63,7 @@ namespace EasyPlayer.Shell
         public void Handle(PlayRequestMessage message) { NowPlayingWidget(); }
         public void Handle(ActivateWidgetMessage message) { ActivateWidget(message.Widget); }
         public void Handle(OutOfQuotaMessage message) { windowMgr.ShowDialog(new OutOfQuotaViewModel(eventAgg, message)); }
+        public void Handle(ApplicationUpdateAvailableMessage message) { windowMgr.ShowNotification(new ApplicationUpdateViewModel(), 4500); }
 
         public void KeyDown(KeyEventArgs e)
         {
