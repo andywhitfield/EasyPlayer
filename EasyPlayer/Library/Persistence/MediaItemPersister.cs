@@ -26,11 +26,11 @@ namespace EasyPlayer.Library.Persistence
                 return;
             }
 
-            this.persistence.WriteTextFile("library", mediaItem.Name, Serialize(mediaItem));
+            this.persistence.WriteTextFile("library", mediaItem.Id, Serialize(mediaItem));
             if (mediaItem.IsDeleted)
-                this.persistence.DeleteFile("library.data", mediaItem.Name);
-            else if (!this.persistence.Filenames("library.data").Contains(mediaItem.Name))
-                this.persistence.WriteBinaryFile("library.data", mediaItem.Name, mediaItem.DataStream());
+                this.persistence.DeleteFile("library.data", mediaItem.Id);
+            else if (!this.persistence.Filenames("library.data").Contains(mediaItem.Id))
+                this.persistence.WriteBinaryFile("library.data", mediaItem.Id, mediaItem.DataStream());
 
             Debug.WriteLine("Item {0} saved", mediaItem.Name);
         }
@@ -44,7 +44,8 @@ namespace EasyPlayer.Library.Persistence
                 var serializedMediaItem = XDocument.Parse(this.persistence.ReadTextFile("library", mediaName));
                 var item = new MediaItem
                 {
-                    Name = mediaName,
+                    Id = mediaName,
+                    Name = serializedMediaItem.Element("MediaItem").Attribute("Name").Value,
                     IsAvailable = true,
                     IsDeleted = bool.Parse(serializedMediaItem.Element("MediaItem").Attribute("Deleted").Value),
                     MediaPosition = double.Parse(serializedMediaItem.Element("MediaItem").Attribute("MediaPosition").Value),

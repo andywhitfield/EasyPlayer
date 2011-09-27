@@ -17,6 +17,7 @@ namespace EasyPlayer.Library
 
         public MediaItem()
         {
+            Id = Guid.NewGuid().ToString("N");
             Name = "";
             IsAvailable = false;
             IsDeleted = false;
@@ -25,6 +26,7 @@ namespace EasyPlayer.Library
             extendedProperties = new Dictionary<string, string>();
         }
 
+        public virtual string Id { get; set; }
         public virtual string Name { get; set; }
         public virtual DateTime UtcDateAddedToLibrary { get; set; }
         public virtual IDictionary<string, string> ExtendedProperties { get { return extendedProperties; } }
