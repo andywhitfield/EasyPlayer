@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using EasyPlayer.Messages;
 
 namespace EasyPlayer.Shell
 {
     public class OutOfQuotaViewModel : Screen
     {
+        private static readonly ILog log = Logger.Log<OutOfQuotaViewModel>();
+
         private IEventAggregator eventAgg;
         private OutOfQuotaMessage outOfQuotaMessage;
         private long increaseTo;
@@ -46,7 +47,7 @@ namespace EasyPlayer.Shell
         public void OK()
         {
             var increaseBy = IncreaseTo - outOfQuotaMessage.CurrentQuotaSize;
-            Debug.WriteLine("Increasing quota by {0} bytes", increaseBy);
+            log.Info("Increasing quota by {0} bytes", increaseBy);
             eventAgg.Publish(new IncreaseQuotaMessage(increaseBy));
             TryClose();
         }

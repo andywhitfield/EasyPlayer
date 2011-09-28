@@ -98,6 +98,7 @@
     <Compile Include="Library\MediaItem.cs" />
     <Compile Include="Library\Persistence\IMediaItemPersister.cs" />
     <Compile Include="Library\Persistence\MediaItemPersister.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="MediaControl\Media.cs" />
     <Compile Include="MediaControl\NowPlayingViewModel.cs" />
     <Compile Include="MediaControl\PlayerState.cs" />
@@ -118,6 +119,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="Shell\WindowPersistence.cs" />
+    <Compile Include="Widgets\LoggingViewModel.cs" />
+    <Compile Include="Widgets\PodcastPlay\PlaylistItemViewModel.cs" />
+    <Compile Include="Widgets\PodcastPlay\PodcastPlayViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -133,6 +137,18 @@
     <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Widgets\LoggingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Widgets\PodcastPlay\PlaylistItemView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Widgets\PodcastPlay\PodcastPlayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Widgets\LibraryWidgetView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -145,8 +161,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <EmbeddedResource Include="Library\Kalimba.mp3" />
-    <EmbeddedResource Include="Library\Maid with the Flaxen Hair.mp3" />
     <Page Include="Shell\NavigationBarView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

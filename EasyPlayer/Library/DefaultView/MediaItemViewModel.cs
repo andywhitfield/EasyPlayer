@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Caliburn.Micro;
 using EasyPlayer.Messages;
 
@@ -7,6 +6,8 @@ namespace EasyPlayer.Library.DefaultView
 {
     public class MediaItemViewModel : Screen
     {
+        private static readonly ILog log = Logger.Log<MediaItemViewModel>();
+
         private readonly IEventAggregator eventAgg;
         private readonly MediaItem item;
 
@@ -48,7 +49,7 @@ namespace EasyPlayer.Library.DefaultView
         public bool CanDeleteMediaItem { get { return CanPlayMediaItem; } }
         public void DeleteMediaItem()
         {
-            Debug.WriteLine("Deleting item {0}", item.Name);
+            log.Info("Deleting item {0}", item.Name);
             item.IsDeleted = true;
             eventAgg.Publish(new MediaItemDeletedMessage(item));
         }

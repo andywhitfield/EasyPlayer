@@ -13,6 +13,8 @@ namespace EasyPlayer.MediaControl
 {
     public class NowPlayingViewModel : Screen, IHandle<PlayRequestMessage>
     {
+        private static ILog log = Logger.Log<NowPlayingViewModel>();
+
         private readonly IMediaItemPersister mediaItemPersister;
         private MediaElement mediaElement;
         private MediaItem currentlyPlaying;
@@ -49,6 +51,7 @@ namespace EasyPlayer.MediaControl
 
         public void MediaOpened()
         {
+            log.Info("Opened {0}", CurrentlyPlaying);
             if (mediaElement != null && mediaElement.NaturalDuration.HasTimeSpan)
             {
                 var ts = mediaElement.NaturalDuration.TimeSpan;
@@ -57,6 +60,7 @@ namespace EasyPlayer.MediaControl
                 MediaPositionText = string.Format("00:00:00 / {0:00}:{1:00}:{2:00}",
                     ts.Hours, ts.Minutes, ts.Seconds);
 
+                log.Info("{0} has length {1}", CurrentlyPlaying, ts);
             }
             SliderMouseDown();
             SliderPosition = currentlyPlaying.MediaPosition;
@@ -65,10 +69,15 @@ namespace EasyPlayer.MediaControl
 
         public void MediaEnded()
         {
+            log.Info("Ended {0}", CurrentlyPlaying);
             Stop();
         }
 
-        public void MediaFailed() { }
+        public void MediaFailed()
+        {
+            log.Warn("Failed to load {0}", CurrentlyPlaying);
+            throw new Exception("Could not load media: " + CurrentlyPlaying);
+        }
 
         public PlayerState MediaPlayerState
         {
@@ -77,6 +86,9 @@ namespace EasyPlayer.MediaControl
             {
                 if (!IsCurrentlyPlaying) return;
                 mediaPlayerState = value;
+
+                log.Info("Player is now in state {0}", mediaPlayerState);
+
                 NotifyOfPropertyChange(() => MediaPlayerState);
                 NotifyOfPropertyChange(() => PlayPauseText);
                 NotifyOfPropertyChange(() => CanStop);
@@ -146,6 +158,8 @@ namespace EasyPlayer.MediaControl
             {
                 currentlyPlaying.MediaPosition = SliderPosition;
                 mediaItemPersister.Save(currentlyPlaying);
+
+                log.Info("Saved previous media position: {0}", currentlyPlaying.Name);
             }
 
             MediaPlayerState = PlayerState.Stopped;
@@ -155,6 +169,8 @@ namespace EasyPlayer.MediaControl
             NotifyOfPropertyChange(() => CanPlayPause);
             NotifyOfPropertyChange(() => CanStop);
             MediaPlayerState = PlayerState.Playing;
+
+            log.Info("Started playing item: {0}", currentlyPlaying.Name);
         }
 
         public void SliderMouseDown() { if (!CanPlayPause) return; draggingSlider = true; }

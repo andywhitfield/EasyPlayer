@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Caliburn.Micro;
 using EasyPlayer.Library;
@@ -11,6 +10,8 @@ namespace EasyPlayer.Widgets
 {
     public class LibraryWidgetViewModel : Screen, IAppWidget, ICanNavigate, IHandle<MediaItemDeletedMessage>
     {
+        private static readonly ILog log = Logger.Log<LibraryWidgetViewModel>();
+
         readonly IEventAggregator eventAgg;
         readonly ILibrary library;
         readonly System.Action onCollectionChanged;
@@ -24,7 +25,7 @@ namespace EasyPlayer.Widgets
             onCollectionChanged = () =>
             {
                 LibraryItems = library.MediaItems.Where(m => !m.IsDeleted).Select(m => new MediaItemViewModel(eventAgg, m));
-                Debug.WriteLine("Found {0} media items to show", LibraryItems.Count());
+                log.Info("Found {0} media items to show", LibraryItems.Count());
                 NotifyOfPropertyChange(() => LibraryItems);
             };
 
