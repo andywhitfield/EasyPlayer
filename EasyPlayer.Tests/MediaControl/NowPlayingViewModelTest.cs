@@ -132,5 +132,24 @@ namespace EasyPlayer.Tests.MediaControl
 
             mediaItemPersister.Verify(p => p.Save(media2));
         }
+
+        [TestMethod]
+        public void Given_item_playing_when_item_is_deleted_should_stop_playing()
+        {
+            var eventAgg = new Mock<IEventAggregator>();
+            var mediaItemPersister = new Mock<IMediaItemPersister>();
+            var vm = new NowPlayingViewModel(eventAgg.Object, mediaItemPersister.Object);
+
+            var media1 = new MediaItem();
+            media1.IsDeleted = false;
+
+            vm.Handle(new PlayRequestMessage(media1));
+
+            Assert.AreEqual(PlayerState.Playing, vm.MediaPlayerState);
+
+            media1.IsDeleted = true;
+            Assert.AreEqual(PlayerState.Stopped, vm.MediaPlayerState);
+            Assert.AreEqual("(Nothing)", vm.CurrentlyPlaying);
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Net;
 using Caliburn.Micro;
 using EasyPlayer.Library.Persistence;
@@ -11,14 +13,14 @@ namespace EasyPlayer.Library
         private static readonly ILog log = Logger.Log<Library>();
 
         private readonly IMediaItemPersister mediaItemPersister;
-        private readonly ObservableCollection<MediaItem> mediaItems;
+        private readonly CustomObservableCollection<MediaItem> mediaItems;
 
         public Library(IMediaItemPersister mediaItemPersister)
         {
             this.mediaItemPersister = mediaItemPersister;
             log.Info("Creating library...");
 
-            mediaItems = new ObservableCollection<MediaItem>(this.mediaItemPersister.LoadAll());
+            mediaItems = new CustomObservableCollection<MediaItem>(this.mediaItemPersister.LoadAll());
 
             log.Info("Library populated successfully");
         }
@@ -42,6 +44,7 @@ namespace EasyPlayer.Library
                 newMediaItem.DataStream = () => e.Result;
                 newMediaItem.IsAvailable = true;
                 mediaItemPersister.Save(newMediaItem);
+                mediaItems.RaiseCollectionChanged();
             };
             client.DownloadProgressChanged += (s, e) =>
             {
@@ -55,6 +58,19 @@ namespace EasyPlayer.Library
         public void Update(MediaItem item)
         {
             mediaItemPersister.Save(item);
+            mediaItems.RaiseCollectionChanged();
+        }
+    }
+
+    class CustomObservableCollection<T> : ObservableCollection<T>
+    {
+        public CustomObservableCollection() : base() { }
+        public CustomObservableCollection(IEnumerable<T> collection) : base(collection) { }
+        public CustomObservableCollection(List<T> list) : base(list) { }
+
+        public void RaiseCollectionChanged()
+        {
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
     }
 }

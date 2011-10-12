@@ -106,6 +106,7 @@
     <Compile Include="Messages\ApplicationUpdateAvailableMessage.cs" />
     <Compile Include="Messages\IncreaseQuotaMessage.cs" />
     <Compile Include="Messages\MediaItemDeletedMessage.cs" />
+    <Compile Include="Messages\NowPlayingMediaEndedMessage.cs" />
     <Compile Include="Messages\OutOfQuotaMessage.cs" />
     <Compile Include="Messages\PlayRequestMessage.cs" />
     <Compile Include="Persistence\IPersistence.cs" />
@@ -120,7 +121,9 @@
     <Compile Include="Shell\ShellViewModel.cs" />
     <Compile Include="Shell\WindowPersistence.cs" />
     <Compile Include="Widgets\LoggingViewModel.cs" />
+    <Compile Include="Widgets\PodcastPlay\IPodcastPlayPersister.cs" />
     <Compile Include="Widgets\PodcastPlay\PlaylistItemViewModel.cs" />
+    <Compile Include="Widgets\PodcastPlay\PodcastPlayPersister.cs" />
     <Compile Include="Widgets\PodcastPlay\PodcastPlayViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

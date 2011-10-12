@@ -3,5 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:cal="http://www.caliburnproject.org">
 
-    <ItemsControl x:Name="LibraryItems" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    <ScrollViewer BorderThickness="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <ItemsControl x:Name="LibraryItems" HorizontalAlignment="Left" VerticalAlignment="Top" />
+    </ScrollViewer>
 </UserControl>

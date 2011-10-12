@@ -8,6 +8,8 @@ namespace EasyPlayer.Library.DefaultView
     {
         private static readonly ILog log = Logger.Log<MediaItemViewModel>();
 
+        public event EventHandler OnPlayRequested;
+
         private readonly IEventAggregator eventAgg;
         private readonly MediaItem item;
 
@@ -29,6 +31,8 @@ namespace EasyPlayer.Library.DefaultView
             };
         }
 
+        public MediaItem Item { get { return item; } }
+
         public string Name
         {
             get
@@ -43,6 +47,7 @@ namespace EasyPlayer.Library.DefaultView
         public bool CanPlayMediaItem { get { return item.IsAvailable && !item.IsDeleted; } }
         public void PlayMediaItem()
         {
+            if (OnPlayRequested != null) OnPlayRequested(this, EventArgs.Empty);
             eventAgg.Publish(new PlayRequestMessage(item));
         }
 

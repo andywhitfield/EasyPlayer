@@ -132,10 +132,17 @@ namespace EasyPlayer.Persistence
                     iso.CreateDirectory(directory);
 
                 if (!iso.FileExists(fullPath)) return;
-
+                
                 log.Info("Deleting file from isolated storage {0}", fullPath);
 
-                iso.DeleteFile(fullPath);
+                try
+                {
+                    iso.DeleteFile(fullPath);
+                }
+                catch (IsolatedStorageException ex)
+                {
+                    log.Warn("Error deleting file from Isolated Storage: {0}", ex);
+                }
             }
         }
 

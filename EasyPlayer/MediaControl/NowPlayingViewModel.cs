@@ -16,6 +16,7 @@ namespace EasyPlayer.MediaControl
         private static ILog log = Logger.Log<NowPlayingViewModel>();
 
         private readonly IMediaItemPersister mediaItemPersister;
+        private readonly IEventAggregator eventAgg;
         private MediaElement mediaElement;
         private MediaItem currentlyPlaying;
         private PlayerState mediaPlayerState = PlayerState.Stopped;
@@ -25,6 +26,7 @@ namespace EasyPlayer.MediaControl
         public NowPlayingViewModel(IEventAggregator eventAgg, IMediaItemPersister mediaItemPersister)
         {
             this.mediaItemPersister = mediaItemPersister;
+            this.eventAgg = eventAgg;
             eventAgg.Subscribe(this);
             updateProgressTimer = new DispatcherTimer();
             updateProgressTimer.Interval = TimeSpan.FromMilliseconds(300);
@@ -48,6 +50,7 @@ namespace EasyPlayer.MediaControl
         public bool IsCurrentlyPlaying { get { return currentlyPlaying != null; } }
         public string CurrentlyPlaying { get { return currentlyPlaying == null ? "(Nothing)" : currentlyPlaying.Name; } }
         public Stream MediaStream { get { return currentlyPlaying == null ? null : currentlyPlaying.DataStream(); } }
+        public void CurrentlyPlayingDeleted(object sender, EventArgs e) { Handle(new PlayRequestMessage(null)); }
 
         public void MediaOpened()
         {
@@ -71,6 +74,7 @@ namespace EasyPlayer.MediaControl
         {
             log.Info("Ended {0}", CurrentlyPlaying);
             Stop();
+            eventAgg.Publish(new NowPlayingMediaEndedMessage(currentlyPlaying));
         }
 
         public void MediaFailed()
@@ -156,6 +160,7 @@ namespace EasyPlayer.MediaControl
 
             if (currentlyPlaying != null)
             {
+                currentlyPlaying.IsDeletedChanged -= CurrentlyPlayingDeleted;
                 currentlyPlaying.MediaPosition = SliderPosition;
                 mediaItemPersister.Save(currentlyPlaying);
 
@@ -164,13 +169,24 @@ namespace EasyPlayer.MediaControl
 
             MediaPlayerState = PlayerState.Stopped;
             currentlyPlaying = message.Media;
+
             NotifyOfPropertyChange(() => CurrentlyPlaying);
             NotifyOfPropertyChange(() => MediaStream);
             NotifyOfPropertyChange(() => CanPlayPause);
             NotifyOfPropertyChange(() => CanStop);
-            MediaPlayerState = PlayerState.Playing;
 
-            log.Info("Started playing item: {0}", currentlyPlaying.Name);
+            if (currentlyPlaying != null)
+            {
+                currentlyPlaying.IsDeletedChanged += CurrentlyPlayingDeleted;
+                MediaPlayerState = PlayerState.Playing;
+            }
+            else
+            {
+                MediaPositionText = "";
+                MediaPositionMax = 0;
+            }
+
+            log.Info("Started playing item: {0}", currentlyPlaying != null ? currentlyPlaying.Name : "(Nothing)");
         }
 
         public void SliderMouseDown() { if (!CanPlayPause) return; draggingSlider = true; }

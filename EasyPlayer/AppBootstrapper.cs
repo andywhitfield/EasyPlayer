@@ -9,6 +9,7 @@ using EasyPlayer.Library.DefaultView;
 using EasyPlayer.Messages;
 using EasyPlayer.Persistence;
 using EasyPlayer.Shell;
+using EasyPlayer.Widgets.PodcastPlay;
 
 
 namespace EasyPlayer
@@ -34,11 +35,11 @@ namespace EasyPlayer
                 .SingleInstance()
                 .AsImplementedInterfaces()
                 .AsSelf()
-                .Except<MediaItemView>();
+                .Except<MediaItemView>()
+                .Except<PlaylistItemView>();
 
-            builder
-                .RegisterType<MediaItemView>()
-                .AsSelf();
+            builder.RegisterType<MediaItemView>().AsSelf();
+            builder.RegisterType<PlaylistItemView>().AsSelf();
             
             container = builder.Build();
         }

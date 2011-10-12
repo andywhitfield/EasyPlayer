@@ -20,7 +20,8 @@
         
         <ContentControl x:Name="NavigationBar" Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" />
 
-        <StackPanel Orientation="Vertical" Grid.Row="1" Grid.Column="0">
+        <ScrollViewer Grid.Row="1" Grid.Column="0" BorderThickness="0" VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical">
             <Button Content="Now Playing"
                     Name="NowPlayingWidget"
                     Margin="2, 2, 2, 2"
@@ -39,6 +40,7 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </StackPanel>
+        </ScrollViewer>
 
         <ContentControl x:Name="ActiveItem" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding ActiveItemVisible, Converter={StaticResource booleanToVisibility}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />
         <ContentControl x:Name="NowPlaying" Grid.Row="1" Grid.Column="1" Margin="10, 5, 5, 5" Visibility="{Binding NowPlayingVisible, Converter={StaticResource booleanToVisibility}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" />

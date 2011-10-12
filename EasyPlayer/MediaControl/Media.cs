@@ -48,7 +48,13 @@ namespace EasyPlayer.MediaControl
 
             var mediaEl = d as MediaElement;
             if (mediaEl == null) return;
-            mediaEl.SetSource(e.NewValue as Stream);
+
+            var stream = e.OldValue as Stream;
+            if (stream != null) stream.Dispose();
+
+            stream = e.NewValue as Stream;
+            if (stream == null) return;
+            mediaEl.SetSource(stream);
             mediaEl.Play();
         }
 
