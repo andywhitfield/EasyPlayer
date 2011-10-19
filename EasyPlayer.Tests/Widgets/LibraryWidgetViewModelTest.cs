@@ -22,7 +22,7 @@ namespace EasyPlayer.Tests.Widgets
 
             var libraryWidget = new LibraryWidgetViewModel(eventAgg.Object, library.Object);
             libraryWidget.PlayMediaItem(libraryItems[0]);
-            eventAgg.Verify(x => x.Publish(It.Is<PlayRequestMessage>(r => object.ReferenceEquals(r.Media, libraryItems[0])), null));
+            eventAgg.Verify(x => x.Publish(It.Is<PlayRequestMessage>(r => object.ReferenceEquals(r.Media, libraryItems[0]))));
         }
 
         [TestMethod]

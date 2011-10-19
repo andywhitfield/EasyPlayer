@@ -37,7 +37,7 @@ namespace EasyPlayer.Tests.Library.DefaultView
             var model = new MediaItemViewModel(eventAgg.Object, mediaItem);
             model.PlayMediaItem();
 
-            eventAgg.Verify(e => e.Publish(Match.Create<object>(m => MatchPlayRequestMessage(m, mediaItem)), null));
+            eventAgg.Verify(e => e.Publish(Match.Create<object>(m => MatchPlayRequestMessage(m, mediaItem))));
         }
 
         private bool MatchPlayRequestMessage(object m, MediaItem mediaItem)

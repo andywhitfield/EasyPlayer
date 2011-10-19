@@ -27,7 +27,7 @@ namespace EasyPlayer.Tests.Shell
             outOfQuota.IncreaseTo = 150;
             outOfQuota.OK();
 
-            eventAgg.Verify(e => e.Publish(It.Is<IncreaseQuotaMessage>(m => m.IncreaseBy == 50), null));
+            eventAgg.Verify(e => e.Publish(It.Is<IncreaseQuotaMessage>(m => m.IncreaseBy == 50)));
         }
     }
 }

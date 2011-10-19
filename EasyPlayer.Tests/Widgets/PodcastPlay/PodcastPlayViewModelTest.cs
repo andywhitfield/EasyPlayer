@@ -104,7 +104,7 @@ namespace EasyPlayer.Tests.Widgets.PodcastPlay
             vm.Handle(new NowPlayingMediaEndedMessage(libraryItems[0]));
 
             Assert.AreEqual(1, vm.PlaylistItems.Count());
-            eventAgg.Verify(e => e.Publish(It.Is<PlayRequestMessage>(p => p.Media.Id == "test-2"), null));
+            eventAgg.Verify(e => e.Publish(It.Is<PlayRequestMessage>(p => p.Media.Id == "test-2")));
 
             // then second item finished
             vm.Handle(new NowPlayingMediaEndedMessage(libraryItems[1]));
