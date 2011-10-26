@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Caliburn.Micro;
 using EasyPlayer.Library;
 using EasyPlayer.Library.DefaultView;
@@ -17,12 +19,14 @@ namespace EasyPlayer.Widgets.PodcastPlay
         private readonly ILibrary library;
         private readonly IPodcastPlayPersister persister;
 
+        private Timer removePlayedItemsTimer;
         private List<MediaItem> playlistItems;
         private List<MediaItem> excludedLibraryItems;
 
         private MediaItem playing;
 
         public string Name { get { return "Podcast Play"; } }
+        public TimeSpan RemovePlayedItemsAfter { get; set; }
 
         public PodcastPlayViewModel(ILibrary library, IEventAggregator eventAgg, IPodcastPlayPersister persister)
         {
@@ -30,6 +34,8 @@ namespace EasyPlayer.Widgets.PodcastPlay
             this.eventAgg.Subscribe(this);
             this.library = library;
             this.persister = persister;
+            this.removePlayedItemsTimer = new Timer(RemovePlayedItems, null, TimeSpan.FromSeconds(20), TimeSpan.FromDays(1));
+            this.RemovePlayedItemsAfter = TimeSpan.FromDays(1);
 
             if (persister.IsEmpty)
             {
@@ -50,7 +56,7 @@ namespace EasyPlayer.Widgets.PodcastPlay
         {
             string played;
             m.ExtendedProperties.TryGetValue(PodcastPlay_Played, out played);
-            return played == "Y";
+            return !string.IsNullOrEmpty(played);
         }
 
         public IEnumerable<PlaylistItemViewModel> PlaylistItems
@@ -148,6 +154,33 @@ namespace EasyPlayer.Widgets.PodcastPlay
             log.Info("Media item '{0}' has been started from the podcast playlist. Auto-play has been enabled.", playing.Name);
         }
 
+        public void RemovePlayedItems(object state)
+        {
+            log.Info("Checking for old played items that can be deleted.");
+            var deleteCount = 0;
+            foreach (var playedItem in library.MediaItems.Where(m => m.IsAvailable && !m.IsDeleted && HasPlayed(m)))
+            {
+                DateTime playedOn;
+                string playedOnValue;
+                playedItem.ExtendedProperties.TryGetValue(PodcastPlay_Played, out playedOnValue);
+
+                log.Info("Checking item {0} which was played on the {1}...", playedItem.Name, playedOnValue);
+
+                if (!DateTime.TryParseExact(playedOnValue, "u", null, DateTimeStyles.None, out playedOn))
+                    continue;
+
+                if (DateTime.UtcNow - playedOn >= RemovePlayedItemsAfter)
+                {
+                    log.Info("Item {0} was played over {1} ago (on {2}), deleting.", playedItem.Name, RemovePlayedItemsAfter, playedOnValue);
+
+                    playedItem.IsDeleted = true;
+                    eventAgg.Publish(new MediaItemDeletedMessage(playedItem));
+                    deleteCount++;
+                }
+            }
+            log.Info("Completed checking for old played items: {0} deleted.", deleteCount);
+        }
+
         public void Handle(PlayRequestMessage message)
         {
             // if the item that has been requested to play is not
@@ -181,7 +214,7 @@ namespace EasyPlayer.Widgets.PodcastPlay
                 {
                     playlistItems.Remove(item);
                     message.Media.ExtendedProperties.Remove(PodcastPlay_Played);
-                    message.Media.ExtendedProperties.Add(PodcastPlay_Played, "Y");
+                    message.Media.ExtendedProperties.Add(PodcastPlay_Played, DateTime.UtcNow.ToString("u"));
 
                     PlaylistsChanged();
 

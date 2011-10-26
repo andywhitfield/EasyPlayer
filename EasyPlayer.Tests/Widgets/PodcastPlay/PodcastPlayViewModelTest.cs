@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Caliburn.Micro;
@@ -61,7 +62,7 @@ namespace EasyPlayer.Tests.Widgets.PodcastPlay
         {
             var libraryItems = new ObservableCollection<MediaItem>(new[] {
                 new MediaItem { Id = "test-1", Name = "test 1", IsAvailable = true },
-                new MediaItem { Id = "test-2", Name = "test 1", IsAvailable = true }
+                new MediaItem { Id = "test-2", Name = "test 2", IsAvailable = true }
             });
 
             var library = new Mock<ILibrary>();
@@ -86,7 +87,7 @@ namespace EasyPlayer.Tests.Widgets.PodcastPlay
         {
             var libraryItems = new ObservableCollection<MediaItem>(new[] {
                 new MediaItem { Id = "test-1", Name = "test 1", IsAvailable = true },
-                new MediaItem { Id = "test-2", Name = "test 1", IsAvailable = true }
+                new MediaItem { Id = "test-2", Name = "test 2", IsAvailable = true }
             });
 
             var library = new Mock<ILibrary>();
@@ -109,6 +110,50 @@ namespace EasyPlayer.Tests.Widgets.PodcastPlay
             // then second item finished
             vm.Handle(new NowPlayingMediaEndedMessage(libraryItems[1]));
             Assert.AreEqual(0, vm.PlaylistItems.Count());
+        }
+
+        [TestMethod]
+        public void Given_an_item_played_one_minute_ago_should_not_delete()
+        {
+            var libraryItems = new ObservableCollection<MediaItem>(new[] {
+                new MediaItem { Id = "test-1", Name = "test 1", IsAvailable = true },
+                new MediaItem { Id = "test-2", Name = "test 2", IsAvailable = true }
+            });
+            libraryItems[0].ExtendedProperties.Add("PodcastPlay.Played", DateTime.UtcNow.ToString("u"));
+            libraryItems[1].ExtendedProperties.Add("PodcastPlay.Played", DateTime.UtcNow.AddMinutes(-1).ToString("u"));
+
+            var library = new Mock<ILibrary>();
+            library.Setup(l => l.MediaItems).Returns(libraryItems);
+
+            var vm = new PodcastPlayViewModel(library.Object, new Mock<IEventAggregator>().Object, new Mock<IPodcastPlayPersister>().Object);
+            vm.RemovePlayedItemsAfter = TimeSpan.FromSeconds(90);
+            vm.RemovePlayedItems(null);
+
+            Assert.IsFalse(libraryItems[0].IsDeleted);
+            Assert.IsFalse(libraryItems[1].IsDeleted);
+        }
+
+        [TestMethod]
+        public void Given_an_item_played_two_minutes_ago_should_delete_when_timeout_is_90_seconds()
+        {
+            var libraryItems = new ObservableCollection<MediaItem>(new[] {
+                new MediaItem { Id = "test-1", Name = "test 1", IsAvailable = true },
+                new MediaItem { Id = "test-2", Name = "test 2", IsAvailable = true }
+            });
+            libraryItems[0].ExtendedProperties.Add("PodcastPlay.Played", "some-invalid-date");
+            libraryItems[1].ExtendedProperties.Add("PodcastPlay.Played", DateTime.UtcNow.AddMinutes(-2).ToString("u"));
+
+            var library = new Mock<ILibrary>();
+            library.Setup(l => l.MediaItems).Returns(libraryItems);
+            var eventAgg = new Mock<IEventAggregator>();
+
+            var vm = new PodcastPlayViewModel(library.Object, eventAgg.Object, new Mock<IPodcastPlayPersister>().Object);
+            vm.RemovePlayedItemsAfter = TimeSpan.FromSeconds(90);
+            vm.RemovePlayedItems(null);
+
+            Assert.IsFalse(libraryItems[0].IsDeleted);
+            Assert.IsTrue(libraryItems[1].IsDeleted);
+            eventAgg.Verify(e => e.Publish(It.Is<MediaItemDeletedMessage>(r => object.ReferenceEquals(r.Media, libraryItems[1]))));
         }
     }
 }
