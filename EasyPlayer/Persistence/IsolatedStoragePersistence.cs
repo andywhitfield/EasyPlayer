@@ -13,12 +13,38 @@ namespace EasyPlayer.Persistence
         private static readonly ILog log = Logger.Log<IsolatedStoragePersistence>();
 
         private readonly IEventAggregator eventAgg;
-        private List<System.Action<IsolatedStorageFile>> delayedWrites = new List<System.Action<IsolatedStorageFile>>();
+        private List<System.Action> delayedWrites = new List<System.Action>();
+        private IsolatedStorageFile iso;
+        private bool disposed;
 
         public IsolatedStoragePersistence(IEventAggregator eventAgg)
         {
+            this.iso = IsolatedStorageFile.GetUserStoreForApplication();
             this.eventAgg = eventAgg;
             this.eventAgg.Subscribe(this);
+        }
+
+        ~IsolatedStoragePersistence()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed) return;
+            disposed = true;
+
+            if (disposing)
+            {
+                if (iso != null) iso.Dispose();
+                iso = null;
+            }
         }
 
         public void WriteTextFile(string filename, string contents)
@@ -45,18 +71,16 @@ namespace EasyPlayer.Persistence
         public void WriteBinaryFile(string directory, string filename, Stream contents)
         {
             var fullPath = string.IsNullOrWhiteSpace(directory) ? filename : Path.Combine(directory, filename);
-            
-            using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
-                WriteBinaryFileToIsolatedStorage(directory, filename, fullPath, contents, iso);
+            WriteBinaryFileToIsolatedStorage(directory, filename, fullPath, contents);
         }
-        private void WriteBinaryFileToIsolatedStorage(string directory, string filename, string fullPath, Stream contents, IsolatedStorageFile iso)
+        private void WriteBinaryFileToIsolatedStorage(string directory, string filename, string fullPath, Stream contents)
         {
             if (iso.AvailableFreeSpace < contents.Length)
             {
                 log.Info("Not enough space to write contents to isolated storage - have to prompt user to increase quota. Current quota: {0}; Free space: {1}; Attempting to write: {2}", iso.Quota, iso.AvailableFreeSpace, contents.Length);
                 eventAgg.Publish(new OutOfQuotaMessage(iso.Quota, iso.AvailableFreeSpace, contents.Length));
 
-                delayedWrites.Add(i => WriteBinaryFileToIsolatedStorage(directory, filename, fullPath, contents, i));
+                delayedWrites.Add(() => WriteBinaryFileToIsolatedStorage(directory, filename, fullPath, contents));
 
                 return;
             }
@@ -78,13 +102,10 @@ namespace EasyPlayer.Persistence
         {
             var filePattern = string.IsNullOrWhiteSpace(inDirectory) ? "*.*" : Path.Combine(inDirectory, "*.*");
 
-            using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                if (!string.IsNullOrWhiteSpace(inDirectory) && !iso.DirectoryExists(inDirectory))
-                    iso.CreateDirectory(inDirectory);
+            if (!string.IsNullOrWhiteSpace(inDirectory) && !iso.DirectoryExists(inDirectory))
+                iso.CreateDirectory(inDirectory);
 
-                return iso.GetFileNames(filePattern);
-            }
+            return iso.GetFileNames(filePattern);
         }
 
         public string ReadTextFile(string filename)
@@ -105,17 +126,14 @@ namespace EasyPlayer.Persistence
         {
             var fullPath = string.IsNullOrWhiteSpace(directory) ? filename : Path.Combine(directory, filename);
 
-            using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                if (!string.IsNullOrWhiteSpace(directory) && !iso.DirectoryExists(directory))
-                    iso.CreateDirectory(directory);
+            if (!string.IsNullOrWhiteSpace(directory) && !iso.DirectoryExists(directory))
+                iso.CreateDirectory(directory);
 
-                if (!iso.FileExists(fullPath)) return new MemoryStream();
+            if (!iso.FileExists(fullPath)) return new MemoryStream();
 
-                log.Info("Reading from isolated storage {0}", fullPath);
+            log.Info("Reading from isolated storage {0}", fullPath);
 
-                return iso.OpenFile(fullPath, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.Read);
-            }
+            return iso.OpenFile(fullPath, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.Read);
         }
 
         public void DeleteFile(string filename)
@@ -126,43 +144,37 @@ namespace EasyPlayer.Persistence
         {
             var fullPath = string.IsNullOrWhiteSpace(directory) ? filename : Path.Combine(directory, filename);
 
-            using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                if (!string.IsNullOrWhiteSpace(directory) && !iso.DirectoryExists(directory))
-                    iso.CreateDirectory(directory);
+            if (!string.IsNullOrWhiteSpace(directory) && !iso.DirectoryExists(directory))
+                iso.CreateDirectory(directory);
 
-                if (!iso.FileExists(fullPath)) return;
+            if (!iso.FileExists(fullPath)) return;
                 
-                log.Info("Deleting file from isolated storage {0}", fullPath);
+            log.Info("Deleting file from isolated storage {0}", fullPath);
 
-                try
-                {
-                    iso.DeleteFile(fullPath);
-                }
-                catch (IsolatedStorageException ex)
-                {
-                    log.Warn("Error deleting file from Isolated Storage: {0}", ex);
-                }
+            try
+            {
+                iso.DeleteFile(fullPath);
+            }
+            catch (IsolatedStorageException ex)
+            {
+                log.Warn("Error deleting file from Isolated Storage: {0}", ex);
             }
         }
 
         public void Handle(IncreaseQuotaMessage message)
         {
-            using (var iso = IsolatedStorageFile.GetUserStoreForApplication())
-            {
-                var newQuotaSize = iso.Quota + Math.Max(message.IncreaseBy, 1024);
-                log.Info("Increasing quota to {0}", newQuotaSize);
+            var newQuotaSize = iso.Quota + Math.Max(message.IncreaseBy, 1024);
+            log.Info("Increasing quota to {0}", newQuotaSize);
                 
-                var increased = iso.IncreaseQuotaTo(newQuotaSize);
-                log.Info("Increased quota? {0}", increased);
+            var increased = iso.IncreaseQuotaTo(newQuotaSize);
+            log.Info("Increased quota? {0}", increased);
 
-                var writes = new List<System.Action<IsolatedStorageFile>>(delayedWrites);
-                delayedWrites.Clear();
+            var writes = new List<System.Action>(delayedWrites);
+            delayedWrites.Clear();
                 
-                writes.ForEach(a => a(iso));
+            writes.ForEach(a => a());
 
-                log.Info("Replayed writes that were pending the quota request.");
-            }
+            log.Info("Replayed writes that were pending the quota request.");
         }
     }
 }

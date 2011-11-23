@@ -111,6 +111,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppBootstrapperTest.cs" />
+    <Compile Include="CustomObservableCollectionTest.cs" />
     <Compile Include="Library\DefaultView\MediaItemViewModelTest.cs" />
     <Compile Include="Library\LibraryTest.cs" />
     <Compile Include="Library\MediaItemTest.cs" />
@@ -120,6 +121,9 @@
     <Compile Include="ShellViewModelTest.cs" />
     <Compile Include="Shell\NavigationBarViewModelTest.cs" />
     <Compile Include="Shell\OutOfQuotaViewModelTest.cs" />
+    <Compile Include="Widgets\Feeds\FeedRepositoryTest.cs" />
+    <Compile Include="Widgets\Feeds\FeedsViewModelTest.cs" />
+    <Compile Include="Widgets\Feeds\FeedTest.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModelTest.cs" />
     <Compile Include="Widgets\PodcastPlay\PlaylistItemViewModelTest.cs" />
     <Compile Include="Widgets\PodcastPlay\PodcastPlayPersisterTest.cs" />

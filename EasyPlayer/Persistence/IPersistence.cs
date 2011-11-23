@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace EasyPlayer.Persistence
 {
-    public interface IPersistence
+    public interface IPersistence : IDisposable
     {
         void WriteTextFile(string filename, string contents);
         void WriteTextFile(string directory, string filename, string contents);

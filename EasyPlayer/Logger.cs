@@ -30,7 +30,7 @@ namespace EasyPlayer
         private static void Write(string message)
         {
             messages.AddLast(message);
-            while (messages.Count > 10000) messages.RemoveFirst();
+            while (messages.Count > 1000) messages.RemoveFirst();
         }
 
         private class DefaultLogger : ILog

@@ -52,6 +52,8 @@ namespace EasyPlayer.MediaControl
             var stream = e.OldValue as Stream;
             if (stream != null) stream.Dispose();
 
+            mediaEl.Source = null;
+
             stream = e.NewValue as Stream;
             if (stream == null) return;
             mediaEl.SetSource(stream);

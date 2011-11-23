@@ -101,7 +101,9 @@ namespace EasyPlayer
         {
             base.OnExit(sender, e);
             container.Resolve<ShellViewModel>().NowPlaying.OnClose();
-            this.SaveWindowState(container.Resolve<IPersistence>());
+            var persistence = container.Resolve<IPersistence>();
+            this.SaveWindowState(persistence);
+            persistence.Dispose();
         }
 
         protected override void OnUnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)

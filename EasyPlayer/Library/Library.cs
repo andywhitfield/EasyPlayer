@@ -61,16 +61,4 @@ namespace EasyPlayer.Library
             mediaItems.RaiseCollectionChanged();
         }
     }
-
-    class CustomObservableCollection<T> : ObservableCollection<T>
-    {
-        public CustomObservableCollection() : base() { }
-        public CustomObservableCollection(IEnumerable<T> collection) : base(collection) { }
-        public CustomObservableCollection(List<T> list) : base(list) { }
-
-        public void RaiseCollectionChanged()
-        {
-            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-        }
-    }
 }

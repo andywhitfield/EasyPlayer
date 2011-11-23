@@ -86,12 +86,14 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.XPath, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppBootstrapper.cs" />
+    <Compile Include="CustomObservableCollection.cs" />
     <Compile Include="ICanNavigate.cs" />
     <Compile Include="Library\DefaultView\MediaItemViewModel.cs" />
     <Compile Include="Library\ILibrary.cs" />
@@ -116,6 +118,11 @@
     <Compile Include="Shell\ControlProperties.cs" />
     <Compile Include="Shell\NavigationBarViewModel.cs" />
     <Compile Include="Shell\OutOfQuotaViewModel.cs" />
+    <Compile Include="Widgets\Feeds\Feed.cs" />
+    <Compile Include="Widgets\Feeds\FeedItem.cs" />
+    <Compile Include="Widgets\Feeds\FeedRepository.cs" />
+    <Compile Include="Widgets\Feeds\FeedsViewModel.cs" />
+    <Compile Include="Widgets\Feeds\IFeedRepository.cs" />
     <Compile Include="Widgets\IAppWidget.cs" />
     <Compile Include="Widgets\LibraryWidgetViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -141,6 +148,10 @@
     <None Include="Properties\OutOfBrowserSettings.xml" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Widgets\Feeds\FeedsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Widgets\LoggingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
