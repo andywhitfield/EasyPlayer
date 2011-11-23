@@ -92,7 +92,7 @@ namespace EasyPlayer.Widgets.Feeds
                 new XAttribute("Name", feed.Name),
                 new XAttribute("Url", feed.Url),
                 new XAttribute("LastCheckInfo", feed.LastCheckInfo),
-                feed.DownloadedGuids.Select(guid => new XElement("DownloadedGuid", guid))
+                feed.DownloadedGuids.Where(guid => !string.IsNullOrWhiteSpace(guid)).Select(guid => new XElement("DownloadedGuid", guid))
                 );
         }
     }
